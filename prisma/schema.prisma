@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id            String         @id @default(cuid())
+  title         String
+  slug          String         @unique
+  sportType     String
+  description   String
+  startAt       DateTime
+  endAt         DateTime
+  timezone      String         @default("Australia/Sydney")
+  locationName  String
+  address       String
+  capacity      Int
+  priceCents    Int            @default(0)
+  isFeatured    Boolean        @default(false)
+  coverImageUrl String
+  galleryImages String         @default("[]")
+  registrations Registration[]
+  createdAt     DateTime       @default(now())
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  name      String
+  email     String
+  phone     String
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String
+  tags      String   @default("[]")
+  createdAt DateTime @default(now())
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  honeypot  String?
+  createdAt DateTime @default(now())
+}
