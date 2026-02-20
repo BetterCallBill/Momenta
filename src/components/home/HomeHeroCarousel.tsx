@@ -95,7 +95,8 @@ export default function HomeHeroCarousel() {
           key={current}
           className="animate-fade-in-up text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl md:text-7xl"
         >
-          {slide.headline}{" "}
+          {slide.headline}
+          <br />
           <span className="text-gold-500">{slide.accent}</span>
         </h1>
         <p
