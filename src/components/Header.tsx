@@ -22,14 +22,14 @@ export default function Header() {
                 <Link href='/' className='inline-block'>
                     {/* light/dark logos live under src/images; static import gives width/height metadata */}
                     <Image
-                        src='/src/images/logo-light.png'
+                        src='/images/logo-light.png'
                         alt='Momenta logo'
                         width={150}
                         height={50}
                         className='block dark:hidden h-auto w-auto'
                     />
                     <Image
-                        src='/src/images/logo-dark.png'
+                        src='/images/logo-dark.png'
                         alt='Momenta logo'
                         width={150}
                         height={50}
