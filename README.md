@@ -55,14 +55,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Production build |
-| `npm run start` | Start production server |
-| `npm run db:migrate` | Run Prisma migrations |
-| `npm run db:seed` | Seed the database |
-| `npm run db:studio` | Open Prisma Studio (DB GUI) |
+| Command              | Description                 |
+| -------------------- | --------------------------- |
+| `npm run dev`        | Start development server    |
+| `npm run build`      | Production build            |
+| `npm run start`      | Start production server     |
+| `npm run db:migrate` | Run Prisma migrations       |
+| `npm run db:seed`    | Seed the database           |
+| `npm run db:studio`  | Open Prisma Studio (DB GUI) |
 
 ---
 
@@ -145,23 +145,23 @@ The MVP uses a mock adapter (`src/lib/instagram.ts`) that returns static data. T
 1. Push to GitHub
 2. Import project in [Vercel](https://vercel.com)
 3. Set environment variables:
-   - `DATABASE_URL` — your PostgreSQL connection string (from [Neon](https://neon.tech) or [Supabase](https://supabase.com), both have free tiers)
+    - `DATABASE_URL` — your PostgreSQL connection string (from [Neon](https://neon.tech) or [Supabase](https://supabase.com), both have free tiers)
 4. Set build command: `npx prisma generate && next build`
 5. After deploy, run migrations:
-   ```bash
-   npx prisma migrate deploy
-   npx prisma db seed
-   ```
+    ```bash
+    npx prisma migrate deploy
+    npx prisma db seed
+    ```
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) |
-| UI | React 19 + Tailwind CSS 4 |
-| Language | TypeScript 5.9 |
-| ORM | Prisma 6 |
-| Database | PostgreSQL 16 |
-| Deployment | Vercel (recommended) |
+| Layer      | Technology                |
+| ---------- | ------------------------- |
+| Framework  | Next.js 16 (App Router)   |
+| UI         | React 19 + Tailwind CSS 4 |
+| Language   | TypeScript 5.9            |
+| ORM        | Prisma 6                  |
+| Database   | PostgreSQL 16             |
+| Deployment | Vercel (recommended)      |
