@@ -8,18 +8,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * Each item: { src, title }
  */
 const EVENTS = [
-  { src: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=600&h=400&fit=crop", title: "Blue Mountains Trail Run" },
-  { src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop", title: "Coastal Hike Series" },
-  { src: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=600&h=400&fit=crop", title: "Golf Championship" },
-  { src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop", title: "Sunrise Yoga" },
-  { src: "https://images.unsplash.com/photo-1564415315949-7a0c4c73aab4?w=600&h=400&fit=crop", title: "BJJ Fundamentals" },
-  { src: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600&h=400&fit=crop", title: "Community Social" },
-  { src: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=400&fit=crop", title: "Marathon Prep" },
-  { src: "https://images.unsplash.com/photo-1504025468847-0e438279542c?w=600&h=400&fit=crop", title: "Harbour Bridge Run" },
-  { src: "https://images.unsplash.com/photo-1526676037777-05a232554f77?w=600&h=400&fit=crop", title: "Bushwalk & Brunch" },
-  { src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop", title: "HIIT Outdoors" },
-  { src: "https://images.unsplash.com/photo-1599058917765-a780eda07a3e?w=600&h=400&fit=crop", title: "Golf Scramble" },
-  { src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=400&fit=crop", title: "Twilight Yoga" },
+  { src: "/images/run/8720bec1ec6286ec55d9150f7007b655.jpeg", title: "City Morning Run" },
+  { src: "/images/hike/livePhoto_1759728035.jpeg", title: "Coastal Hike Series" },
+  { src: "/images/golf/IMG_7209.jpg", title: "Golf Night" },
+  { src: "/images/yoga/_DSC0249.JPG", title: "Yoga Group Class" },
+  { src: "/images/bjj/IMG_2914.JPG", title: "BJJ Group Class" },
+  { src: "/images/DJI_0545.jpeg", title: "Community Social" },
+  { src: "/images/run/81952642eaaa1be82373ece388c1f072.JPG", title: "Morning Run" },
+  { src: "/images/run/e50d10399a5cd1f31861201070454540.jpeg", title: "Harbour Bridge Run" },
+  { src: "/images/yoga/_DSC0295.JPG", title: "Yoga Group Class" },
 ];
 
 export default function PreviousEventsWall() {
