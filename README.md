@@ -85,7 +85,6 @@ src/
 ├── components/             # React components
 │   ├── Header.tsx          # Sticky nav with gold CTA
 │   ├── Footer.tsx          # Links + social icons
-│   ├── HeroSection.tsx     # Full-viewport hero
 │   ├── Carousel.tsx        # Featured events slider
 │   ├── UpcomingStrip.tsx   # Event teaser cards
 │   ├── WeeklyCalendar.tsx  # Mon-Sun calendar grid
@@ -96,7 +95,9 @@ src/
 │   ├── Lightbox.tsx        # Full-screen image viewer
 │   ├── ContactForm.tsx     # Contact form with honeypot
 │   ├── CTABanner.tsx       # Section-break CTA block
-│   └── InstagramShowcase.tsx  # Mock Instagram grid
+│   ├── InstagramShowcase.tsx  # Mock Instagram grid
+│   └── home/               # Home page components
+│       └── HomeHeroCarousel.tsx  # Full-viewport hero carousel
 ├── lib/                    # Shared utilities
 │   ├── prisma.ts           # Prisma client singleton
 │   ├── dates.ts            # Sydney timezone date logic

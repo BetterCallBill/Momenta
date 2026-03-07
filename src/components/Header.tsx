@@ -18,22 +18,15 @@ export default function Header() {
 
     return (
         <header className='fixed top-0 left-0 right-0 z-50 dark:bg-brand-black bg-white'>
-            <nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-4' aria-label='Main navigation'>
+            <nav className='mx-auto flex max-w-7xl items-center justify-between px-6' aria-label='Main navigation'>
                 <Link href='/' className='inline-block'>
                     {/* light/dark logos live under src/images; static import gives width/height metadata */}
                     <Image
                         src='/images/logo-light.png'
                         alt='Momenta logo'
-                        width={150}
-                        height={50}
-                        className='block dark:hidden h-auto w-auto'
-                    />
-                    <Image
-                        src='/images/logo-dark.png'
-                        alt='Momenta logo'
-                        width={150}
-                        height={50}
-                        className='hidden dark:block h-auto w-auto'
+                        width={100}
+                        height={33}
+                        className='dark:block h-auto w-auto'
                     />
                 </Link>
 
@@ -42,7 +35,7 @@ export default function Header() {
                         <li key={link.href}>
                             <Link
                                 href={link.href}
-                                className='text-sm font-medium dark:text-brand-white/80 text-neutral-600 transition-colors hover:text-gold-500'>
+                                className='text-sm font-medium dark:text-brand-white/80 text-neutral-600 hover:text-gold-500'>
                                 {link.label}
                             </Link>
                         </li>
@@ -85,7 +78,7 @@ export default function Header() {
                                 <Link
                                     href={link.href}
                                     onClick={() => setMenuOpen(false)}
-                                    className='block rounded-lg px-3 py-2.5 text-sm font-medium dark:text-brand-white/80 text-neutral-600 transition-colors dark:hover:bg-neutral-800 hover:bg-neutral-100 hover:text-gold-500'>
+                                    className='block rounded-lg px-3 py-2.5 text-sm font-medium dark:text-brand-white/80 text-neutral-600 dark:hover:bg-neutral-800 hover:bg-neutral-100 hover:text-gold-500'>
                                     {link.label}
                                 </Link>
                             </li>

@@ -6,21 +6,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const SLIDES = [
   {
-    src: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=1920&h=1080&fit=crop",
+    src: "/images/DJI_0545.jpeg",
     headline: "Move Together.",
     accent: "Grow Together.",
     subtitle:
       "Sydney's Chinese outdoor community — running, hiking, golf, BJJ, yoga and more.",
   },
   {
-    src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&h=1080&fit=crop",
+    src: "/images/26-02-08-event/DJI_02.JPG",
     headline: "Every Week,",
     accent: "Rain or Shine.",
     subtitle:
       "Discover curated outdoor events that challenge, inspire, and connect.",
   },
   {
-    src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop",
+    src: "/images/bbfb2614da2367c8fadb40fcdcbc4698.jpeg",
     headline: "Find Your",
     accent: "Momentum.",
     subtitle:
