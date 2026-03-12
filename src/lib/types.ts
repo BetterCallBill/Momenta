@@ -1,6 +1,8 @@
-import type { Event, Registration, GalleryImage, Inquiry } from "@prisma/client";
+import type { Event, Registration, GalleryImage, Inquiry, Sponsor, TeamMember, Admin } from "@prisma/client";
 
-export type { Event, Registration, GalleryImage, Inquiry };
+export type { Event, Registration, GalleryImage, Inquiry, Sponsor, TeamMember, Admin };
+
+export type GalleryItemType = "image" | "video";
 
 export type EventWithCount = Event & {
   _count: { registrations: number };

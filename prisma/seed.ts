@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -24,6 +25,9 @@ async function main() {
   await prisma.event.deleteMany();
   await prisma.galleryImage.deleteMany();
   await prisma.inquiry.deleteMany();
+  await prisma.sponsor.deleteMany();
+  await prisma.teamMember.deleteMany();
+  await prisma.admin.deleteMany();
 
   const mon = getMonday();
 
@@ -203,7 +207,13 @@ async function main() {
     await prisma.galleryImage.create({ data: img });
   }
 
-  console.log("Seed complete: 10 events, 12 gallery images");
+  // Admin account
+  const passwordHash = await bcrypt.hash("momenta_admin_2025", 10);
+  await prisma.admin.create({
+    data: { email: "admin@momenta.com.au", passwordHash },
+  });
+
+  console.log("Seed complete: 10 events, 12 gallery images, 1 admin");;
 }
 
 main()
