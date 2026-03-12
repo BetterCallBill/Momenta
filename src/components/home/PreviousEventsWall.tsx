@@ -16,7 +16,6 @@ const EVENTS = [
   { src: "/images/DJI_0545.jpeg", title: "Community Social" },
   { src: "/images/run/81952642eaaa1be82373ece388c1f072.JPG", title: "Morning Run" },
   { src: "/images/run/e50d10399a5cd1f31861201070454540.jpeg", title: "Harbour Bridge Run" },
-  { src: "/images/yoga/_DSC0295.JPG", title: "Yoga Group Class" },
 ];
 
 export default function PreviousEventsWall() {

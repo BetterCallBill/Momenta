@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Momenta — Sydney's Chinese Outdoor Community",
-  description:
-    "Running, hiking, golf, BJJ, yoga and more. Join Sydney's most active Chinese outdoor community.",
+    title: "Momenta — Sydney's Chinese Outdoor Community",
+    description: "Running, hiking, golf, BJJ, yoga and more. Join Sydney's most active Chinese outdoor community.",
 };
 
 const themeScript = `
@@ -22,26 +21,23 @@ const themeScript = `
 })();
 `;
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="noise-overlay antialiased">
-        <a href="#main-content" className="skip-link">
-          Skip to content
-        </a>
-        {children}
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang='en' className='dark' suppressHydrationWarning>
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+                <link rel='icon' href='/images/logo-light.png' />
+                <link
+                    href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'
+                    rel='stylesheet'
+                />
+            </head>
+            <body className='noise-overlay antialiased'>
+                <a href='#main-content' className='skip-link'>
+                    Skip to content
+                </a>
+                {children}
+            </body>
+        </html>
+    );
 }

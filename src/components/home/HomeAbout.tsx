@@ -62,9 +62,9 @@ export default function HomeAbout() {
 
             <div className="mt-8 flex flex-wrap gap-8">
               {[
-                { num: "500+", label: "Members" },
-                { num: "120+", label: "Events Hosted" },
-                { num: "8", label: "Sports" },
+                { num: "1500+", label: "Members" },
+                { num: "10+", label: "Events Hosted" },
+                { num: "8+", label: "Sports" },
               ].map((stat) => (
                 <div key={stat.label}>
                   <p className="text-2xl font-bold text-gold-500">{stat.num}</p>
