@@ -207,6 +207,34 @@ async function main() {
     await prisma.galleryImage.create({ data: img });
   }
 
+  // Hero slides
+  await prisma.heroSlide.deleteMany();
+  await prisma.heroSlide.createMany({
+    data: [
+      {
+        src: "/images/DJI_0545.jpeg",
+        headline: "Move Together.",
+        accent: "Grow Together.",
+        subtitle: "Sydney's Chinese outdoor community — running, hiking, golf, BJJ, yoga and more.",
+        sortOrder: 0,
+      },
+      {
+        src: "/images/26-02-08-event/DJI_02.JPG",
+        headline: "Every Week,",
+        accent: "Rain or Shine.",
+        subtitle: "Discover curated outdoor events that challenge, inspire, and connect.",
+        sortOrder: 1,
+      },
+      {
+        src: "/images/bbfb2614da2367c8fadb40fcdcbc4698.jpeg",
+        headline: "Find Your",
+        accent: "Momentum.",
+        subtitle: "From beginners to seasoned athletes — there's a place for everyone.",
+        sortOrder: 2,
+      },
+    ],
+  });
+
   // Admin account
   const passwordHash = await bcrypt.hash("momenta_admin_2025", 10);
   await prisma.admin.create({

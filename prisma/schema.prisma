@@ -84,3 +84,14 @@ model Inquiry {
   honeypot  String?
   createdAt DateTime @default(now())
 }
+
+model HeroSlide {
+  id        String   @id @default(cuid())
+  src       String
+  headline  String
+  accent    String
+  subtitle  String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
