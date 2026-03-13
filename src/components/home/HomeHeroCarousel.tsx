@@ -22,7 +22,7 @@ const SLIDES = [
   {
     src: "/images/bbfb2614da2367c8fadb40fcdcbc4698.jpeg",
     headline: "Find Your",
-    accent: "Momentum.",
+    accent: "Moment.",
     subtitle:
       "From beginners to seasoned athletes — there's a place for everyone.",
   },
