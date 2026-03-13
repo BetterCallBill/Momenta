@@ -4,6 +4,7 @@ const sections = [
   { href: "/admin/events", label: "Events", description: "Create and manage events" },
   { href: "/admin/registrations", label: "Registrations", description: "View sign-ups and export Excel" },
   { href: "/admin/gallery", label: "Gallery", description: "Add or remove photos and videos" },
+  { href: "/admin/hero-slides", label: "Hero Slides", description: "Manage homepage carousel images" },
   { href: "/admin/sponsors", label: "Sponsors", description: "Manage partner organisations" },
   { href: "/admin/team", label: "Team", description: "Edit team member profiles" },
 ];
