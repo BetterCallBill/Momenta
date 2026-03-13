@@ -4,31 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const SLIDES = [
-  {
-    src: "/images/DJI_0545.jpeg",
-    headline: "Move Together.",
-    accent: "Grow Together.",
-    subtitle:
-      "Sydney's Chinese outdoor community — running, hiking, golf, BJJ, yoga and more.",
-  },
-  {
-    src: "/images/26-02-08-event/DJI_02.JPG",
-    headline: "Every Week,",
-    accent: "Rain or Shine.",
-    subtitle:
-      "Discover curated outdoor events that challenge, inspire, and connect.",
-  },
-  {
-    src: "/images/bbfb2614da2367c8fadb40fcdcbc4698.jpeg",
-    headline: "Find Your",
-    accent: "Moment.",
-    subtitle:
-      "From beginners to seasoned athletes — there's a place for everyone.",
-  },
-];
+type Slide = {
+  id: string;
+  src: string;
+  headline: string;
+  accent: string;
+  subtitle: string;
+};
 
-export default function HomeHeroCarousel() {
+export default function HomeHeroCarousel({ slides }: { slides: Slide[] }) {
+  const SLIDES = slides;
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);

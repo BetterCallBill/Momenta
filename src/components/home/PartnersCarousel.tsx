@@ -2,19 +2,15 @@
 
 import Image from 'next/image';
 
-/**
- * Mock partner data. Replace with DB or CMS fetch later.
- * Each partner needs: name, logoUrl, website.
- */
-const PARTNERS = [
-    { name: 'Leap', logoUrl: '/images/partner/leap.jpg', website: '' },
-    { name: 'Garage Jiu Jitsu', logoUrl: '/images/partner/garage-bjj.jpg', website: 'https://salomon.com' },
-    { name: 'Unovia', logoUrl: '/images/partner/unovia.jpg', website: 'https://garagejiujitsu.com.au/' },
-    { name: 'Jingjie', logoUrl: '/images/partner/jingjie.PNG', website: '' },
-];
+type Sponsor = {
+    id: string;
+    name: string;
+    logoUrl: string;
+    websiteUrl: string | null;
+};
 
-export default function PartnersCarousel() {
-    const doubled = [...PARTNERS, ...PARTNERS];
+export default function PartnersCarousel({ sponsors }: { sponsors: Sponsor[] }) {
+    const doubled = [...sponsors, ...sponsors];
 
     return (
         <section className='py-16 md:py-20 overflow-hidden'>
@@ -25,14 +21,15 @@ export default function PartnersCarousel() {
 
             <div className='fade-mask-x mt-10'>
                 <div className='marquee-track flex w-max items-center gap-8 px-6'>
-                    {doubled.map((partner, i) => (
+                    {doubled.map((sponsor, i) => (
                         <Image
-                            key={`${partner.name}-${i}`}
-                            src={partner.logoUrl}
-                            alt={partner.name}
+                            key={`${sponsor.id}-${i}`}
+                            src={sponsor.logoUrl}
+                            alt={sponsor.name}
                             width={180}
                             height={72}
                             className='h-18 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0 hover:brightness-110'
+                            unoptimized
                         />
                     ))}
                 </div>
