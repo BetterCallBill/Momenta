@@ -3,22 +3,14 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-/**
- * Mock previous event images. Replace with DB (GalleryImage) or CMS later.
- * Each item: { src, title }
- */
-const EVENTS = [
-  { src: "/images/run/8720bec1ec6286ec55d9150f7007b655.jpeg", title: "City Morning Run" },
-  { src: "/images/hike/livePhoto_1759728035.jpeg", title: "Coastal Hike Series" },
-  { src: "/images/golf/IMG_7209.jpg", title: "Golf Night" },
-  { src: "/images/yoga/_DSC0249.JPG", title: "Yoga Group Class" },
-  { src: "/images/bjj/IMG_2914.JPG", title: "BJJ Group Class" },
-  { src: "/images/DJI_0545.jpeg", title: "Community Social" },
-  { src: "/images/run/81952642eaaa1be82373ece388c1f072.JPG", title: "Morning Run" },
-  { src: "/images/run/e50d10399a5cd1f31861201070454540.jpeg", title: "Harbour Bridge Run" },
-];
+type GalleryImage = {
+  id: string;
+  url: string;
+  alt: string;
+};
 
-export default function PreviousEventsWall() {
+export default function PreviousEventsWall({ images }: { images: GalleryImage[] }) {
+  const EVENTS = images.map((img) => ({ src: img.url, title: img.alt }));
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -47,7 +39,7 @@ export default function PreviousEventsWall() {
           ? ((prev + dir + EVENTS.length) % EVENTS.length)
           : null
       ),
-    []
+    [EVENTS.length]
   );
 
   useEffect(() => {
