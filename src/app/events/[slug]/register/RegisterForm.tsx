@@ -4,9 +4,10 @@ import { useState } from "react";
 
 interface RegisterFormProps {
   eventId: string;
+  priceCents: number;
 }
 
-export default function RegisterForm({ eventId }: RegisterFormProps) {
+export default function RegisterForm({ eventId, priceCents }: RegisterFormProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -43,16 +44,26 @@ export default function RegisterForm({ eventId }: RegisterFormProps) {
 
   if (status === "success") {
     return (
-      <div className="mt-4 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
-          <svg className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="mt-4">
+        <div className="text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
+            <svg className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="mt-4 text-lg font-semibold">You&apos;re registered!</h3>
+          <p className="mt-2 text-sm text-brand-white/60">
+            We&apos;ll send a confirmation to your email. See you there!
+          </p>
         </div>
-        <h3 className="mt-4 text-lg font-semibold">You&apos;re registered!</h3>
-        <p className="mt-2 text-sm text-brand-white/60">
-          We&apos;ll send a confirmation to your email. See you there!
-        </p>
+        {priceCents > 0 && (
+          <div className="mt-6 rounded-xl border border-gold-500/30 bg-gold-500/10 p-5">
+            <p className="text-sm font-semibold text-gold-400">Payment required — ${(priceCents / 100).toFixed(2)}</p>
+            <p className="mt-1 text-sm text-brand-white/60">
+              Please arrange payment on the day of the event. Contact us via WeChat or email if you have any questions.
+            </p>
+          </div>
+        )}
       </div>
     );
   }

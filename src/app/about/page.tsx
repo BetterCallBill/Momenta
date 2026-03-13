@@ -2,29 +2,7 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CTABanner from "@/components/CTABanner";
-
-const TEAM = [
-  {
-    name: "Alex Chen",
-    role: "Founder & Community Lead",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-  },
-  {
-    name: "Sarah Liu",
-    role: "Events Coordinator",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face",
-  },
-  {
-    name: "David Wang",
-    role: "Fitness & Wellness Coach",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
-  },
-  {
-    name: "Michelle Zhang",
-    role: "Social Media & Partnerships",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face",
-  },
-];
+import { prisma } from "@/lib/prisma";
 
 const VALUES = [
   {
@@ -49,7 +27,9 @@ const VALUES = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const team = await prisma.teamMember.findMany({ orderBy: { sortOrder: "asc" } });
+
   return (
     <>
       <Header />
@@ -132,23 +112,37 @@ export default function AboutPage() {
             <h2 className="text-center text-2xl font-bold md:text-3xl">
               The Team
             </h2>
-            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {TEAM.map((member) => (
-                <div key={member.name} className="text-center">
-                  <div className="mx-auto h-32 w-32 overflow-hidden rounded-full border-2 border-gold-500/30">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      width={128}
-                      height={128}
-                      className="h-full w-full object-cover"
-                    />
+            {team.length === 0 ? (
+              <p className="mt-10 text-center text-brand-white/40">Coming soon.</p>
+            ) : (
+              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                {team.map((member) => (
+                  <div key={member.id} className="text-center">
+                    <div className="mx-auto h-32 w-32 overflow-hidden rounded-full border-2 border-gold-500/30 bg-neutral-800 flex items-center justify-center">
+                      {member.avatarUrl ? (
+                        <Image
+                          src={member.avatarUrl}
+                          alt={member.name}
+                          width={128}
+                          height={128}
+                          className="h-full w-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <span className="text-3xl font-bold text-neutral-500">
+                          {member.name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-4 font-semibold">{member.name}</h3>
+                    <p className="text-sm text-gold-400">{member.role}</p>
+                    {member.bio && (
+                      <p className="mt-1 text-xs text-brand-white/40 leading-relaxed">{member.bio}</p>
+                    )}
                   </div>
-                  <h3 className="mt-4 font-semibold">{member.name}</h3>
-                  <p className="text-sm text-brand-white/50">{member.role}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

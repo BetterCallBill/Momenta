@@ -78,7 +78,7 @@ export default async function RegisterPage({ params }: PageProps) {
           {spotsLeft > 0 ? (
             <div className="mt-8">
               <h2 className="text-lg font-semibold">Register</h2>
-              <RegisterForm eventId={event.id} />
+              <RegisterForm eventId={event.id} priceCents={event.priceCents} />
             </div>
           ) : (
             <div className="mt-8 rounded-lg bg-red-500/10 p-4 text-center">

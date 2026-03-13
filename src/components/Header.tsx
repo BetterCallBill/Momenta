@@ -8,7 +8,9 @@ import ThemeToggle from './ThemeToggle';
 const NAV_LINKS = [
     { href: '/', label: 'Home' },
     { href: '/events', label: 'Events' },
+    { href: '/calendar', label: 'Calendar' },
     { href: '/gallery', label: 'Gallery' },
+    { href: '/sponsors', label: 'Partners' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
 ];
