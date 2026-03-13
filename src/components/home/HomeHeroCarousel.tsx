@@ -41,6 +41,8 @@ export default function HomeHeroCarousel({ slides }: { slides: Slide[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [current, goTo]);
 
+  if (!SLIDES.length) return null;
+
   const slide = SLIDES[current];
 
   return (
