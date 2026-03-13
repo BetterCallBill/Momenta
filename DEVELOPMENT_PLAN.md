@@ -1,5 +1,29 @@
 # Momenta 网站升级开发计划
 
+## 进度总览
+
+| # | 功能模块 | 状态 |
+|---|---------|------|
+| 1 | DB 模型扩展（Sponsor / TeamMember / Admin / HeroSlide） | ✅ 完成 |
+| 2 | 类型更新 `src/lib/types.ts` | ✅ 完成 |
+| 3 | Admin 认证系统（JWT + bcrypt + proxy.ts + 登录页） | ✅ 完成 |
+| 4 | Admin Hero Slides 管理页 | ✅ 完成 |
+| 5 | Admin Sponsors 管理页 | ✅ 完成 |
+| 6 | 首页动态化（HomeHeroCarousel / PartnersCarousel / PreviousEventsWall 从 DB 读取） | ✅ 完成 |
+| 7 | 3月活动数据写入 seed（9个真实活动） | ✅ 完成 |
+| 8 | **Admin 活动管理**（新建 / 编辑 / 删除活动） | 🔲 待开发 |
+| 9 | **Admin 报名管理**（查看报名名单 + Excel 导出） | 🔲 待开发 |
+| 10 | **Admin 图库管理**（图片 / 视频 CRUD） | 🔲 待开发 |
+| 11 | **Admin 团队成员管理** | 🔲 待开发 |
+| 12 | **活动详情页** `/events/[slug]` | 🔲 待开发 |
+| 13 | **活动日历页** `/calendar`（月视图） | 🔲 待开发 |
+| 14 | **赞助商页** `/sponsors` | 🔲 待开发 |
+| 15 | **关于页动态化**（团队成员从 DB 读取） | 🔲 待开发 |
+| 16 | **报名页付款提示**（priceCents > 0 时显示线下付款说明） | 🔲 待开发 |
+| 17 | **Header 导航更新**（加入日历、赞助商链接） | 🔲 待开发 |
+
+---
+
 ## 背景与目标
 
 Momenta 是悉尼华人户外运动社区的官方网站，基于 Next.js 16 + Prisma + PostgreSQL 构建。
