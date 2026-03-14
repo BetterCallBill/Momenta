@@ -8,6 +8,7 @@ const navItems = [
   { href: "/admin/events", label: "Events" },
   { href: "/admin/registrations", label: "Registrations" },
   { href: "/admin/gallery", label: "Gallery" },
+  { href: "/admin/previous-events", label: "Previous Events Wall" },
   { href: "/admin/hero-slides", label: "Hero Slides" },
   { href: "/admin/sponsors", label: "Sponsors" },
   { href: "/admin/team", label: "Team" },
