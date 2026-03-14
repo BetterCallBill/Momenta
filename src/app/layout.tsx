@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { LanguageProvider } from '@/components/LanguageContext';
 
 export const metadata: Metadata = {
     title: "Momenta — Sydney's Chinese Outdoor Community",
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <a href='#main-content' className='skip-link'>
                     Skip to content
                 </a>
-                {children}
+                <LanguageProvider>{children}</LanguageProvider>
             </body>
         </html>
     );

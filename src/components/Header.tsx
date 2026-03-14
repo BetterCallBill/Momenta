@@ -4,25 +4,27 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
-
-const NAV_LINKS = [
-    { href: '/', label: 'Home' },
-    { href: '/events', label: 'Events' },
-    { href: '/calendar', label: 'Calendar' },
-    { href: '/gallery', label: 'Gallery' },
-    { href: '/sponsors', label: 'Partners' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
-];
+import LanguageToggle from './LanguageToggle';
+import { useLanguage } from './LanguageContext';
 
 export default function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { t } = useLanguage();
+
+    const NAV_LINKS = [
+        { href: '/', label: t.nav.home },
+        { href: '/events', label: t.nav.events },
+        { href: '/calendar', label: t.nav.calendar },
+        { href: '/gallery', label: t.nav.gallery },
+        { href: '/sponsors', label: t.nav.partners },
+        { href: '/about', label: t.nav.about },
+        { href: '/contact', label: t.nav.contact },
+    ];
 
     return (
         <header className='fixed top-0 left-0 right-0 z-50 dark:bg-brand-black bg-white'>
             <nav className='mx-auto flex max-w-7xl items-center justify-between px-6' aria-label='Main navigation'>
                 <Link href='/' className='inline-block'>
-                    {/* light/dark logos live under src/images; static import gives width/height metadata */}
                     <Image
                         src='/images/logo-light.png'
                         alt='Momenta logo'
@@ -44,8 +46,11 @@ export default function Header() {
                     ))}
                     <li>
                         <Link href='/events' className='btn-premium rounded-full px-5 py-2 text-sm'>
-                            Register Now
+                            {t.nav.register}
                         </Link>
+                    </li>
+                    <li>
+                        <LanguageToggle />
                     </li>
                     <li>
                         <ThemeToggle />
@@ -53,6 +58,7 @@ export default function Header() {
                 </ul>
 
                 <div className='flex items-center gap-3 md:hidden'>
+                    <LanguageToggle />
                     <ThemeToggle />
                     <button
                         className='flex flex-col gap-1.5'
@@ -90,7 +96,7 @@ export default function Header() {
                                 href='/events'
                                 onClick={() => setMenuOpen(false)}
                                 className='btn-premium block rounded-full px-5 py-2.5 text-center text-sm'>
-                                Register Now
+                                {t.nav.register}
                             </Link>
                         </li>
                     </ul>
