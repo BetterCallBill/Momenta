@@ -38,11 +38,22 @@ function tagsToJson(input: string): string {
   return JSON.stringify(tags);
 }
 
+type EditForm = {
+  url: string;
+  videoUrl: string;
+  alt: string;
+  tags: string;
+};
+
 export default function AdminGalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [form, setForm] = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<EditForm>({ url: "", videoUrl: "", alt: "", tags: "" });
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState("");
 
   async function load() {
     const res = await fetch("/api/admin/gallery");
@@ -86,6 +97,45 @@ export default function AdminGalleryPage() {
     load();
   }
 
+  function startEdit(item: GalleryItem) {
+    setEditingId(item.id);
+    setEditForm({
+      url: item.url,
+      videoUrl: item.videoUrl ?? "",
+      alt: item.alt,
+      tags: parseTags(item.tags).join(", "),
+    });
+    setEditError("");
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditError("");
+  }
+
+  async function handleEditSave(id: string) {
+    setEditLoading(true);
+    setEditError("");
+    const res = await fetch(`/api/admin/gallery/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url: editForm.url,
+        videoUrl: editForm.videoUrl || null,
+        alt: editForm.alt,
+        tags: tagsToJson(editForm.tags),
+      }),
+    });
+    setEditLoading(false);
+    if (!res.ok) {
+      const data = await res.json();
+      setEditError(data.error ?? "Failed to save");
+      return;
+    }
+    setEditingId(null);
+    load();
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-white mb-1">Gallery</h1>
@@ -103,63 +153,138 @@ export default function AdminGalleryPage() {
           const tags = parseTags(item.tags);
           const isFeatured = tags.includes("featured");
 
+          const isEditing = editingId === item.id;
+
           return (
             <div
               key={item.id}
-              className="flex items-center gap-4 bg-neutral-900 border border-neutral-800 rounded-xl p-4"
+              className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden"
             >
-              {/* Thumbnail */}
-              <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-neutral-800 flex items-center justify-center">
-                {item.type === "video" ? (
-                  <>
-                    {item.url ? (
-                      <Image
-                        src={item.url}
-                        alt={item.alt}
-                        fill
-                        className="object-cover opacity-70"
-                        unoptimized
-                      />
-                    ) : null}
-                    <span className="absolute text-xl">🎬</span>
-                  </>
-                ) : (
-                  <Image
-                    src={item.url}
-                    alt={item.alt}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                )}
-              </div>
-
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-semibold text-white truncate">{item.alt}</p>
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 uppercase tracking-wide">
-                    {item.type}
-                  </span>
-                  {isFeatured && (
-                    <span className="text-xs px-1.5 py-0.5 rounded bg-gold-500/20 text-gold-400 font-medium">
-                      首页展示
-                    </span>
+              {/* Row */}
+              <div className="flex items-center gap-4 p-4">
+                {/* Thumbnail */}
+                <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-neutral-800 flex items-center justify-center">
+                  {item.type === "video" ? (
+                    <>
+                      {item.url ? (
+                        <Image
+                          src={item.url}
+                          alt={item.alt}
+                          fill
+                          className="object-cover opacity-70"
+                          unoptimized
+                        />
+                      ) : null}
+                      <span className="absolute text-xl">🎬</span>
+                    </>
+                  ) : (
+                    <Image
+                      src={item.url}
+                      alt={item.alt}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
                   )}
                 </div>
-                {tags.length > 0 && (
-                  <p className="text-xs text-neutral-500 mt-0.5">{tags.join(", ")}</p>
-                )}
-                <p className="text-xs text-neutral-700 mt-0.5 truncate">{item.url}</p>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-sm font-semibold text-white truncate">{item.alt}</p>
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 uppercase tracking-wide">
+                      {item.type}
+                    </span>
+                    {isFeatured && (
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-gold-500/20 text-gold-400 font-medium">
+                        首页展示
+                      </span>
+                    )}
+                  </div>
+                  {tags.length > 0 && (
+                    <p className="text-xs text-neutral-500 mt-0.5">{tags.join(", ")}</p>
+                  )}
+                  <p className="text-xs text-neutral-700 mt-0.5 truncate">{item.url}</p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => isEditing ? cancelEdit() : startEdit(item)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                      isEditing
+                        ? "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"
+                        : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
+                    }`}
+                  >
+                    {isEditing ? "Cancel" : "Edit"}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="px-3 py-1.5 text-xs font-medium bg-neutral-800 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
 
-              {/* Delete */}
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="px-3 py-1.5 text-xs font-medium bg-neutral-800 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors shrink-0"
-              >
-                Delete
-              </button>
+              {/* Inline edit form */}
+              {isEditing && (
+                <div className="border-t border-neutral-800 px-4 pb-4 pt-3 space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className={item.type === "video" ? "" : "sm:col-span-2"}>
+                      <label className="block text-xs font-medium text-neutral-400 mb-1">
+                        {item.type === "video" ? "Cover Image URL" : "Image URL"}
+                      </label>
+                      <input
+                        type="text"
+                        value={editForm.url}
+                        onChange={(e) => setEditForm({ ...editForm, url: e.target.value })}
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
+                      />
+                    </div>
+                    {item.type === "video" && (
+                      <div>
+                        <label className="block text-xs font-medium text-neutral-400 mb-1">Video URL</label>
+                        <input
+                          type="text"
+                          value={editForm.videoUrl}
+                          onChange={(e) => setEditForm({ ...editForm, videoUrl: e.target.value })}
+                          className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-xs font-medium text-neutral-400 mb-1">Alt Text</label>
+                      <input
+                        type="text"
+                        value={editForm.alt}
+                        onChange={(e) => setEditForm({ ...editForm, alt: e.target.value })}
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-neutral-400 mb-1">
+                        Tags <span className="text-neutral-600">(comma separated)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={editForm.tags}
+                        onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
+                      />
+                    </div>
+                  </div>
+                  {editError && <p className="text-xs text-red-400">{editError}</p>}
+                  <button
+                    onClick={() => handleEditSave(item.id)}
+                    disabled={editLoading}
+                    className="px-4 py-1.5 bg-gold-500 hover:bg-gold-400 disabled:opacity-50 text-black text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    {editLoading ? "Saving…" : "Save Changes"}
+                  </button>
+                </div>
+              )}
             </div>
           );
         })}
