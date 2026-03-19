@@ -13,6 +13,8 @@ export async function PUT(
     data: {
       ...(body.tags !== undefined && { tags: body.tags }),
       ...(body.alt !== undefined && { alt: body.alt }),
+      ...(body.url !== undefined && { url: body.url }),
+      ...(body.videoUrl !== undefined && { videoUrl: body.videoUrl }),
     },
   });
 
