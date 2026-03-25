@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import ThemeToggle from './ThemeToggle';
 import LanguageToggle from './LanguageToggle';
+import WeChatLoginButton from './WeChatLoginButton';
 import { useLanguage } from './LanguageContext';
 
 export default function Header() {
@@ -34,6 +35,7 @@ export default function Header() {
                     />
                 </Link>
 
+                {/* Desktop nav */}
                 <ul className='hidden items-center gap-8 md:flex'>
                     {NAV_LINKS.map(link => (
                         <li key={link.href}>
@@ -45,9 +47,7 @@ export default function Header() {
                         </li>
                     ))}
                     <li>
-                        <Link href='/events' className='btn-premium rounded-full px-5 py-2 text-sm'>
-                            {t.nav.register}
-                        </Link>
+                        <WeChatLoginButton />
                     </li>
                     <li>
                         <LanguageToggle />
@@ -57,6 +57,7 @@ export default function Header() {
                     </li>
                 </ul>
 
+                {/* Mobile controls */}
                 <div className='flex items-center gap-3 md:hidden'>
                     <LanguageToggle />
                     <ThemeToggle />
@@ -78,6 +79,7 @@ export default function Header() {
                 </div>
             </nav>
 
+            {/* Mobile menu */}
             {menuOpen && (
                 <div className='border-t dark:border-neutral-800 border-neutral-200 dark:bg-brand-black/95 bg-white/95 backdrop-blur-md md:hidden'>
                     <ul className='flex flex-col gap-1 px-6 py-4'>
@@ -92,12 +94,7 @@ export default function Header() {
                             </li>
                         ))}
                         <li className='mt-2'>
-                            <Link
-                                href='/events'
-                                onClick={() => setMenuOpen(false)}
-                                className='btn-premium block rounded-full px-5 py-2.5 text-center text-sm'>
-                                {t.nav.register}
-                            </Link>
+                            <WeChatLoginButton />
                         </li>
                     </ul>
                 </div>

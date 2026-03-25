@@ -8,7 +8,10 @@ export async function GET(req: NextRequest) {
 
   const registrations = await prisma.registration.findMany({
     where,
-    include: { event: { select: { title: true, startAt: true } } },
+    include: {
+      event: { select: { title: true, startAt: true } },
+      user: { select: { id: true, email: true } },
+    },
     orderBy: { createdAt: "asc" },
   });
 
