@@ -97,12 +97,14 @@ model Admin {
 }
 
 model Inquiry {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  message   String
-  honeypot  String?
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  inquiryType String?
+  message     String
+  honeypot    String?
+  createdAt   DateTime @default(now())
 }
 
 model HeroSlide {
