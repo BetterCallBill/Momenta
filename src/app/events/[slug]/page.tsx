@@ -121,7 +121,7 @@ export default async function EventDetailPage({ params }: PageProps) {
           {event.description && (
             <div className="mt-8">
               <h2 className="text-lg font-bold text-white mb-3">About this event</h2>
-              <p className="text-neutral-300 leading-relaxed">{event.description}</p>
+              <p className="text-neutral-300 leading-relaxed whitespace-pre-wrap wrap-break-word">{event.description}</p>
             </div>
           )}
 

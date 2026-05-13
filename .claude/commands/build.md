@@ -189,3 +189,11 @@ STOP after generating the review report.
 Wait for human review and approval before continuing.
 
 Never automatically start the next task.
+
+---
+
+# Step 10: Merge to test branch 
+
+---
+
+# Step 11: Update task.md
