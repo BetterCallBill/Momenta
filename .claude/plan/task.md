@@ -33,7 +33,7 @@
 | 12 | Remove filter bar from Events page | 4.1 | 3 | Medium | ✅ Done | Merged via feature/remove-events-filter-task-1; deleted `FilterBar.tsx`, simplified query to upcoming events chronologically |
 | 13 | Calendar — enhance monthly grid with event dot indicators | 4.2 | 3 | Medium | ✅ Done | Merged via feature/monthly-calendar-dots-task-1; sport-colored dots (sky/emerald/lime/red/violet/gold), max 3 + overflow count, Sydney timezone fix |
 | 14 | Events page — two-column layout (calendar left, detail panel right) | 4.3 | 3 | Medium | ✅ Done | Merged via feature/events-two-column-task-1; EventsBrowser client component with interactive mini-calendar + EventDetailCard panel |
-| 15 | Event detail page — full-width poster banner | 9.1 | 3 | Medium | ⏳ Pending | Add `posterImage` field to `Event` schema; render as banner above details |
+| 15 | Event detail page — full-width poster banner | 9.1 | 3 | Medium | ✅ Done | Merged via feature/event-poster-banner-task-1; 60vh cinematic banner with overlaid title, sport badge, date/time, location |
 | 16 | Gallery admin — replace featured text input with boolean checkbox | 7.2 | 4 | Low | ⏳ Pending | `admin/gallery/page.tsx` UI change; verify `GalleryImage.featured` schema type |
 | 17 | Gallery — group images by event name in accordion layout | 7.3 | 4 | Low | ⏳ Pending | Add `eventName` relation to `GalleryImage`; accordion component on public gallery |
 | 18 | Team public page — verify responsive card layout renders correctly | 8.1 | 4 | Low | 🔍 Verify | Admin CRUD done; confirm public `/about` or team route displays members sorted by `sortOrder` |
@@ -45,13 +45,14 @@
 
 | Status | Count |
 |---|---|
-| ✅ Done | 12 |
+| ✅ Done | 13 |
 | 🔍 Verify | 4 |
-| ⏳ Pending | 3 |
+| ⏳ Pending | 2 |
 | **Total** | **19** |
 
 ---
 
-## Next Up (Medium Priority)
+## Next Up (Low Priority)
 
-1. **Task 15** — Event detail page: full-width poster banner (`posterImage` field)
+1. **Task 16** — Gallery admin: replace featured text input with boolean checkbox
+2. **Task 17** — Gallery: group images by event name in accordion layout
