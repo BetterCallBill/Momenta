@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { parseJsonArray, SPORT_LABELS } from "@/lib/types";
 import * as XLSX from "xlsx";
 
 export async function GET(req: NextRequest) {
@@ -14,8 +15,9 @@ export async function GET(req: NextRequest) {
   });
 
   const rows = registrations.map((r, i) => {
-    let interests = "";
-    try { interests = JSON.parse(r.interestedEventTypes).join(", "); } catch { /* empty */ }
+    const interests = parseJsonArray(r.interestedEventTypes)
+      .map((k) => SPORT_LABELS[k] ?? k)
+      .join(", ");
     return {
       "#": i + 1,
       Name: r.name,

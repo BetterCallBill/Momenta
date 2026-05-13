@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { parseJsonArray, SPORT_LABELS } from "@/lib/types";
 
 type Event = { id: string; title: string; startAt: string };
 
@@ -126,10 +127,7 @@ export default function AdminRegistrationsPage() {
                   <td className="px-4 py-3 text-neutral-300">{r.phone}</td>
                   <td className="px-4 py-3 text-neutral-300 whitespace-nowrap">{r.ageRange ?? "—"}</td>
                   <td className="px-4 py-3 text-neutral-500 max-w-[160px] truncate">
-                    {(() => {
-                      try { return JSON.parse(r.interestedEventTypes).join(", ") || "—"; }
-                      catch { return "—"; }
-                    })()}
+                    {parseJsonArray(r.interestedEventTypes).map((k) => SPORT_LABELS[k] ?? k).join(", ") || "—"}
                   </td>
                   <td className="px-4 py-3 text-neutral-500 max-w-[160px] truncate">{r.notes ?? "—"}</td>
                   {selectedEventId === "all" && (
