@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { TZ as SYDNEY_TZ } from '@/lib/dates';
 
 type Event = {
     id: string;
@@ -21,8 +22,6 @@ type Event = {
 
 const SPORT_TYPES = ['RUNNING', 'HIKING', 'YOGA', 'BJJ', 'GOLF', 'CROSSFIT', 'MARTIAL_ARTS', 'OTHER'];
 
-const SYDNEY_TZ = 'Australia/Sydney';
-
 // Convert a UTC ISO string to "YYYY-MM-DDTHH:MM" in Sydney time (for datetime-local inputs).
 function toSydneyDatetime(iso: string): string {
     const parts = new Intl.DateTimeFormat('en-AU', {
@@ -38,6 +37,7 @@ function toSydneyDatetime(iso: string): string {
 // Convert "YYYY-MM-DDTHH:MM" (entered as Sydney local time) to a UTC ISO string.
 // Handles DST by computing the Sydney offset for that moment via Intl.
 function sydneyLocalToISO(localDatetime: string): string {
+    if (!localDatetime) return '';
     const asIfUtc = new Date(localDatetime + ':00.000Z');
     const parts = new Intl.DateTimeFormat('en-AU', {
         timeZone: SYDNEY_TZ,
