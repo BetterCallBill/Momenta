@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendInquiryNotificationEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, message, honeypot } = body;
+    const { name, email, phone, inquiryType, message, honeypot } = body;
 
-    // Spam check
     if (honeypot) {
       return NextResponse.json({ ok: true });
     }
@@ -19,8 +19,23 @@ export async function POST(request: NextRequest) {
     }
 
     const inquiry = await prisma.inquiry.create({
-      data: { name, email, message },
+      data: {
+        name,
+        email,
+        phone: phone || null,
+        inquiryType: inquiryType || null,
+        message,
+      },
     });
+
+    sendInquiryNotificationEmail({
+      to: "momenta0429@gmail.com",
+      name,
+      email,
+      phone: phone || null,
+      inquiryType: inquiryType || "General",
+      message,
+    }).catch((err) => console.error("[email] inquiry notification failed:", err));
 
     return NextResponse.json(inquiry, { status: 201 });
   } catch {
