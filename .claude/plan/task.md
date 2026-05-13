@@ -1,6 +1,6 @@
 # Task List — Momenta Events Platform
 
-> Sorted by priority (High → Medium → Low), then phase. Last updated: 2026-05-13.
+> Sorted by priority (High → Medium → Low), then phase. Last updated: 2026-05-14.
 
 ---
 
@@ -31,7 +31,7 @@
 | 10 | Stripe payment integration — Checkout Session + webhook | 6.2 | 2 | High | 🔍 Verify | Verify `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` set in prod; test end-to-end |
 | 11 | Registration form — add Interested Event Type + Age Range fields | 6.3 | 2 | High | ✅ Done | `ageRange` + `interestedEventTypes` on `Registration`; age range dropdown + sport type checkboxes in `RegisterForm.tsx`; admin table + XLSX export updated |
 | 12 | Remove filter bar from Events page | 4.1 | 3 | Medium | ✅ Done | Merged via feature/remove-events-filter-task-1; deleted `FilterBar.tsx`, simplified query to upcoming events chronologically |
-| 13 | Calendar — enhance monthly grid with event dot indicators | 4.2 | 3 | Medium | ⏳ Pending | `calendar/page.tsx` or `WeeklyCalendar.tsx` — highlight dates with events |
+| 13 | Calendar — enhance monthly grid with event dot indicators | 4.2 | 3 | Medium | ✅ Done | Merged via feature/monthly-calendar-dots-task-1; sport-colored dots (sky/emerald/lime/red/violet/gold), max 3 + overflow count, Sydney timezone fix |
 | 14 | Events page — two-column layout (calendar left, detail panel right) | 4.3 | 3 | Medium | ⏳ Pending | New responsive grid; event detail panel shows name, time, location, capacity, fee |
 | 15 | Event detail page — full-width poster banner | 9.1 | 3 | Medium | ⏳ Pending | Add `posterImage` field to `Event` schema; render as banner above details |
 | 16 | Gallery admin — replace featured text input with boolean checkbox | 7.2 | 4 | Low | ⏳ Pending | `admin/gallery/page.tsx` UI change; verify `GalleryImage.featured` schema type |
@@ -45,15 +45,14 @@
 
 | Status | Count |
 |---|---|
-| ✅ Done | 10 |
+| ✅ Done | 11 |
 | 🔍 Verify | 4 |
-| ⏳ Pending | 5 |
+| ⏳ Pending | 4 |
 | **Total** | **19** |
 
 ---
 
 ## Next Up (Medium Priority)
 
-1. **Task 13** — Calendar monthly grid: highlight dates with events
-3. **Task 14** — Events page two-column layout (calendar left, detail panel right)
-4. **Task 15** — Event detail page: full-width poster banner (`posterImage` field)
+1. **Task 14** — Events page two-column layout (calendar left, detail panel right)
+2. **Task 15** — Event detail page: full-width poster banner (`posterImage` field)
