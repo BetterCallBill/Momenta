@@ -2,7 +2,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
-import { SPORT_ICONS } from "@/lib/types";
+import { SPORT_ICONS, SPORT_DOT_COLORS } from "@/lib/types";
+import { getDayOfMonth } from "@/lib/dates";
 
 interface PageProps {
   searchParams: Promise<{ month?: string; year?: string }>;
@@ -33,10 +34,10 @@ export default async function CalendarPage({ searchParams }: PageProps) {
     select: { id: true, title: true, slug: true, sportType: true, startAt: true },
   });
 
-  // Group events by day
+  // Group events by Sydney-local day of month
   const byDay: Record<number, typeof events> = {};
   for (const ev of events) {
-    const d = new Date(ev.startAt).getDate();
+    const d = getDayOfMonth(new Date(ev.startAt));
     if (!byDay[d]) byDay[d] = [];
     byDay[d].push(ev);
   }
@@ -44,7 +45,6 @@ export default async function CalendarPage({ searchParams }: PageProps) {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDow = getFirstDayOfWeek(year, month);
 
-  // prev / next month params
   const prevMonth = month === 0 ? 11 : month - 1;
   const prevYear = month === 0 ? year - 1 : year;
   const nextMonth = month === 11 ? 0 : month + 1;
@@ -77,7 +77,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            <span className="text-sm font-semibold text-white min-w-[140px] text-center">{monthName}</span>
+            <span className="text-sm font-semibold text-white min-w-35 text-center">{monthName}</span>
             <Link
               href={`/calendar?year=${nextYear}&month=${nextMonth}`}
               className="rounded-full border border-neutral-700 p-2 text-neutral-400 hover:border-gold-500/50 hover:text-white transition-colors"
@@ -105,7 +105,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
           <div className="grid grid-cols-7 divide-x divide-neutral-800">
             {/* Leading empty cells */}
             {Array.from({ length: firstDow }).map((_, i) => (
-              <div key={`empty-${i}`} className="min-h-[100px] bg-neutral-950/50 border-b border-neutral-800" />
+              <div key={`empty-${i}`} className="min-h-20 bg-neutral-950/50 border-b border-neutral-800" />
             ))}
 
             {/* Day cells */}
@@ -115,16 +115,18 @@ export default async function CalendarPage({ searchParams }: PageProps) {
               const isToday = isCurrentMonth && today.getDate() === day;
               const colPos = (firstDow + i) % 7;
               const isWeekend = colPos === 5 || colPos === 6;
+              const visibleDots = dayEvents.slice(0, 3);
+              const overflow = dayEvents.length - visibleDots.length;
 
               return (
                 <div
                   key={day}
-                  className={`min-h-[100px] border-b border-neutral-800 p-2 ${
+                  className={`min-h-20 border-b border-neutral-800 p-2 ${
                     isWeekend ? "bg-neutral-900/30" : "bg-neutral-950"
                   }`}
                 >
                   <span
-                    className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold mb-1 ${
+                    className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
                       isToday
                         ? "bg-gold-500 text-brand-black"
                         : "text-neutral-500"
@@ -133,19 +135,24 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                     {day}
                   </span>
 
-                  <div className="space-y-1">
-                    {dayEvents.map((ev) => (
-                      <Link
-                        key={ev.id}
-                        href={`/events/${ev.slug}`}
-                        className="block rounded px-1.5 py-1 bg-gold-500/10 hover:bg-gold-500/20 border border-gold-500/20 transition-colors group"
-                      >
-                        <p className="text-xs text-gold-400 leading-snug truncate group-hover:text-gold-300">
-                          {SPORT_ICONS[ev.sportType] ?? "🎯"} {ev.title}
-                        </p>
-                      </Link>
-                    ))}
-                  </div>
+                  {dayEvents.length > 0 && (
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                      {visibleDots.map((ev) => (
+                        <Link
+                          key={ev.id}
+                          href={`/events/${ev.slug}`}
+                          title={`${SPORT_ICONS[ev.sportType] ?? "🎯"} ${ev.title}`}
+                          aria-label={ev.title}
+                          className={`h-2 w-2 rounded-full hover:opacity-75 transition-opacity shrink-0 ${SPORT_DOT_COLORS[ev.sportType] ?? "bg-gold-500"}`}
+                        />
+                      ))}
+                      {overflow > 0 && (
+                        <span className="text-[9px] leading-none text-gold-500/60 font-medium">
+                          +{overflow}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -156,7 +163,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
               const remainder = total % 7;
               if (remainder === 0) return null;
               return Array.from({ length: 7 - remainder }).map((_, i) => (
-                <div key={`trail-${i}`} className="min-h-[100px] bg-neutral-950/50 border-b border-neutral-800" />
+                <div key={`trail-${i}`} className="min-h-20 bg-neutral-950/50 border-b border-neutral-800" />
               ));
             })()}
           </div>
