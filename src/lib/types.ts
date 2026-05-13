@@ -36,6 +36,15 @@ export const SPORT_ICONS: Record<string, string> = {
   OTHER: "🎯",
 };
 
+export const SPORT_DOT_COLORS: Record<string, string> = {
+  RUNNING: "bg-sky-400",
+  HIKING: "bg-emerald-400",
+  GOLF: "bg-lime-400",
+  BJJ: "bg-red-400",
+  YOGA: "bg-violet-400",
+  OTHER: "bg-gold-500",
+};
+
 export interface InstagramPost {
   id: string;
   imageUrl: string;
