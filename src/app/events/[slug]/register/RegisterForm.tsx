@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { readWeChatSession, type WeChatData } from "@/components/WeChatLoginButton";
+import { AGE_RANGE_OPTIONS, SPORT_LABELS, type SportTypeValue } from "@/lib/types";
 
 interface RegisterFormProps {
   eventId: string;
@@ -33,6 +34,7 @@ export default function RegisterForm({ eventId, priceCents }: RegisterFormProps)
   const [errorMsg, setErrorMsg] = useState("");
   const [wechat, setWechat] = useState<WeChatData | null>(null);
   const [waiverAgreed, setWaiverAgreed] = useState(false);
+  const [interestedTypes, setInterestedTypes] = useState<SportTypeValue[]>([]);
   const waiverRef = useRef<HTMLDivElement>(null);
 
   // Pre-fill WeChat data from sessionStorage
@@ -59,10 +61,11 @@ export default function RegisterForm({ eventId, priceCents }: RegisterFormProps)
     const body = {
       eventId,
       name: (form.get("name") as string).trim(),
-      age: Number(form.get("age")),
+      ageRange: form.get("ageRange") as string,
       email: (form.get("email") as string).trim().toLowerCase(),
       phone: (form.get("phone") as string).trim(),
       gender: form.get("gender") as string,
+      interestedEventTypes: interestedTypes,
       wechatName: wechat?.wechatName ?? (form.get("wechatName") as string | null) ?? undefined,
       wechatOpenId: wechat?.wechatOpenId ?? undefined,
       notes: (form.get("notes") as string).trim() || undefined,
@@ -159,7 +162,7 @@ export default function RegisterForm({ eventId, priceCents }: RegisterFormProps)
         )}
       </div>
 
-      {/* ── Name + Age (two-column) ─────────────────────────────────── */}
+      {/* ── Name + Age Range (two-column) ──────────────────────────── */}
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 sm:col-span-1">
           <Label required>{t.register.name}</Label>
@@ -171,16 +174,13 @@ export default function RegisterForm({ eventId, priceCents }: RegisterFormProps)
           />
         </div>
         <div className="col-span-2 sm:col-span-1">
-          <Label required>{t.register.age}</Label>
-          <input
-            name="age"
-            type="number"
-            required
-            min={10}
-            max={120}
-            className={inputCls}
-            placeholder={t.register.age_placeholder}
-          />
+          <Label required>{t.register.age_range}</Label>
+          <select name="ageRange" required defaultValue="" className={inputCls}>
+            <option value="" disabled>{t.register.age_range_placeholder}</option>
+            {AGE_RANGE_OPTIONS.map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -220,6 +220,34 @@ export default function RegisterForm({ eventId, priceCents }: RegisterFormProps)
           <option value="other">{t.register.gender_other}</option>
           <option value="prefer_not">{t.register.gender_prefer_not}</option>
         </select>
+      </div>
+
+      {/* ── Interested Event Types ──────────────────────────────────── */}
+      <div>
+        <Label>{t.register.interested_event_types}</Label>
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {(Object.entries(SPORT_LABELS) as [SportTypeValue, string][]).map(([value, label]) => (
+            <label
+              key={value}
+              className="flex cursor-pointer items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm transition-colors hover:border-gold-500/50"
+            >
+              <input
+                type="checkbox"
+                value={value}
+                checked={interestedTypes.includes(value)}
+                onChange={(e) =>
+                  setInterestedTypes((prev) =>
+                    e.target.checked
+                      ? [...prev, value]
+                      : prev.filter((v) => v !== value)
+                  )
+                }
+                className="h-4 w-4 shrink-0 cursor-pointer accent-gold-500"
+              />
+              <span className="text-brand-white/80">{label}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
       {/* ── Notes ───────────────────────────────────────────────────── */}
