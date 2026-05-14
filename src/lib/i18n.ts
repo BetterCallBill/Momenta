@@ -86,6 +86,10 @@ export const translations = {
 
 By signing below, I acknowledge that I have read this Waiver, Release, and Indemnification Agreement, fully understand its terms, and voluntarily agree to be bound by it.`,
     },
+    gallery: {
+      other_group: "Other",
+      photo_count: (n: number) => `${n} photo${n !== 1 ? "s" : ""}`,
+    },
     contact: {
       page_title: "Contact Us",
       page_subtitle: "Got a question, suggestion, or want to collaborate? We'd love to hear from you.",
@@ -200,6 +204,10 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
 5. 健康状况：本人证明自己身体健康，已为参与活动做好充分准备，且未收到任何具有资质的医疗专业人员的相反建议。
 
 签署本声明即表示本人已阅读并完全理解本免责声明、豁免及赔偿协议的条款，并自愿同意受其约束。`,
+    },
+    gallery: {
+      other_group: "其他",
+      photo_count: (n: number) => `${n} 张`,
     },
     contact: {
       page_title: "联系我们",
