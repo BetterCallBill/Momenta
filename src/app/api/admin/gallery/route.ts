@@ -10,7 +10,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { url, alt, type, videoUrl, tags } = body;
+  const { url, alt, type, videoUrl, tags, eventName } = body;
 
   if (!url || !alt) {
     return NextResponse.json({ error: "url and alt are required" }, { status: 400 });
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
       type: type ?? "image",
       videoUrl: videoUrl || null,
       tags: tags ?? "[]",
+      eventName: eventName || null,
     },
   });
 
