@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { parseJsonArray, SPORT_LABELS } from "@/lib/types";
 
 type Event = { id: string; title: string; startAt: string };
 
@@ -9,6 +10,8 @@ type Registration = {
   name: string;
   email: string;
   phone: string;
+  ageRange: string | null;
+  interestedEventTypes: string;
   notes: string | null;
   createdAt: string;
   event: { title: string; startAt: string };
@@ -103,6 +106,8 @@ export default function AdminRegistrationsPage() {
                 <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Name</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Email</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Phone</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Age Range</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Interests</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Notes</th>
                 {selectedEventId === "all" && (
                   <th className="text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide">Event</th>
@@ -120,6 +125,10 @@ export default function AdminRegistrationsPage() {
                   <td className="px-4 py-3 text-white font-medium">{r.name}</td>
                   <td className="px-4 py-3 text-neutral-300">{r.email}</td>
                   <td className="px-4 py-3 text-neutral-300">{r.phone}</td>
+                  <td className="px-4 py-3 text-neutral-300 whitespace-nowrap">{r.ageRange ?? "—"}</td>
+                  <td className="px-4 py-3 text-neutral-500 max-w-[160px] truncate">
+                    {parseJsonArray(r.interestedEventTypes).map((k) => SPORT_LABELS[k] ?? k).join(", ") || "—"}
+                  </td>
                   <td className="px-4 py-3 text-neutral-500 max-w-[160px] truncate">{r.notes ?? "—"}</td>
                   {selectedEventId === "all" && (
                     <td className="px-4 py-3 text-neutral-400 whitespace-nowrap">{r.event.title}</td>

@@ -11,6 +11,7 @@ type GalleryItem = {
   type: string;
   videoUrl: string | null;
   tags: string;
+  eventName: string | null;
   createdAt: string;
 };
 
@@ -20,6 +21,8 @@ const EMPTY_FORM = {
   videoUrl: "",
   alt: "",
   tags: "",
+  featured: false,
+  eventName: "",
 };
 
 function parseTags(raw: string): string[] {
@@ -31,12 +34,13 @@ function parseTags(raw: string): string[] {
   }
 }
 
-function tagsToJson(input: string): string {
-  const tags = input
+function buildTags(tagsInput: string, featured: boolean): string {
+  const other = tagsInput
     .split(",")
     .map((t) => t.trim())
-    .filter(Boolean);
-  return JSON.stringify(tags);
+    .filter((t) => Boolean(t) && t !== "featured");
+  const result = featured ? ["featured", ...other] : other;
+  return JSON.stringify(result);
 }
 
 type EditForm = {
@@ -44,6 +48,8 @@ type EditForm = {
   videoUrl: string;
   alt: string;
   tags: string;
+  featured: boolean;
+  eventName: string;
 };
 
 export default function AdminGalleryPage() {
@@ -52,7 +58,7 @@ export default function AdminGalleryPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<EditForm>({ url: "", videoUrl: "", alt: "", tags: "" });
+  const [editForm, setEditForm] = useState<EditForm>({ url: "", videoUrl: "", alt: "", tags: "", featured: false, eventName: "" });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState("");
 
@@ -76,7 +82,8 @@ export default function AdminGalleryPage() {
         alt: form.alt,
         type: form.type,
         videoUrl: form.type === "video" ? form.videoUrl || null : null,
-        tags: tagsToJson(form.tags),
+        tags: buildTags(form.tags, form.featured),
+        eventName: form.eventName || null,
       }),
     });
 
@@ -99,12 +106,15 @@ export default function AdminGalleryPage() {
   }
 
   function startEdit(item: GalleryItem) {
+    const tags = parseTags(item.tags);
     setEditingId(item.id);
     setEditForm({
       url: item.url,
       videoUrl: item.videoUrl ?? "",
       alt: item.alt,
-      tags: parseTags(item.tags).join(", "),
+      tags: tags.filter((t) => t !== "featured").join(", "),
+      featured: tags.includes("featured"),
+      eventName: item.eventName ?? "",
     });
     setEditError("");
   }
@@ -124,7 +134,8 @@ export default function AdminGalleryPage() {
         url: editForm.url,
         videoUrl: editForm.videoUrl || null,
         alt: editForm.alt,
-        tags: tagsToJson(editForm.tags),
+        tags: buildTags(editForm.tags, editForm.featured),
+        eventName: editForm.eventName || null,
       }),
     });
     setEditLoading(false);
@@ -141,8 +152,8 @@ export default function AdminGalleryPage() {
     <div>
       <h1 className="text-2xl font-bold text-white mb-1">Gallery</h1>
       <p className="text-sm text-neutral-400 mb-8">
-        Manage gallery images and videos. Images tagged{" "}
-        <span className="text-gold-400 font-medium">featured</span> appear on the homepage.
+        Manage gallery images and videos. Items marked{" "}
+        <span className="text-gold-400 font-medium">Show on homepage</span> appear in the Previous Events wall.
       </p>
 
       {/* Image list */}
@@ -153,6 +164,7 @@ export default function AdminGalleryPage() {
         {items.map((item) => {
           const tags = parseTags(item.tags);
           const isFeatured = tags.includes("featured");
+          const otherTags = tags.filter((t) => t !== "featured");
 
           const isEditing = editingId === item.id;
 
@@ -202,8 +214,13 @@ export default function AdminGalleryPage() {
                       </span>
                     )}
                   </div>
-                  {tags.length > 0 && (
-                    <p className="text-xs text-neutral-500 mt-0.5">{tags.join(", ")}</p>
+                  {item.eventName && (
+                    <p className="text-xs text-neutral-400 mt-0.5">
+                      <span className="text-neutral-600">Event: </span>{item.eventName}
+                    </p>
+                  )}
+                  {otherTags.length > 0 && (
+                    <p className="text-xs text-neutral-500 mt-0.5">{otherTags.join(", ")}</p>
                   )}
                   <p className="text-xs text-neutral-700 mt-0.5 truncate">{item.url}</p>
                 </div>
@@ -276,6 +293,32 @@ export default function AdminGalleryPage() {
                       />
                     </div>
                   </div>
+
+                  {/* Event Name */}
+                  <div>
+                    <label className="block text-xs font-medium text-neutral-400 mb-1">
+                      Event Name <span className="text-neutral-600">(optional — used to group images in gallery)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.eventName}
+                      onChange={(e) => setEditForm({ ...editForm, eventName: e.target.value })}
+                      placeholder="e.g. Centennial Park Run 2025"
+                      className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
+                    />
+                  </div>
+
+                  {/* Featured checkbox */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
+                    <input
+                      type="checkbox"
+                      checked={editForm.featured}
+                      onChange={(e) => setEditForm({ ...editForm, featured: e.target.checked })}
+                      className="w-4 h-4 rounded accent-yellow-500 cursor-pointer"
+                    />
+                    <span className="text-sm text-neutral-300">Show on homepage</span>
+                  </label>
+
                   {editError && <p className="text-xs text-red-400">{editError}</p>}
                   <button
                     onClick={() => handleEditSave(item.id)}
@@ -369,14 +412,36 @@ export default function AdminGalleryPage() {
                 type="text"
                 value={form.tags}
                 onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                placeholder="yoga, featured"
+                placeholder="yoga, running"
                 className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
               />
-              <p className="text-xs text-neutral-600 mt-1">
-                Add <span className="text-gold-500">featured</span> to show on homepage
-              </p>
             </div>
           </div>
+
+          {/* Event Name */}
+          <div>
+            <label className="block text-xs font-medium text-neutral-400 mb-1.5">
+              Event Name <span className="text-neutral-600">(optional — used to group images in gallery)</span>
+            </label>
+            <input
+              type="text"
+              value={form.eventName}
+              onChange={(e) => setForm({ ...form, eventName: e.target.value })}
+              placeholder="e.g. Centennial Park Run 2025"
+              className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
+            />
+          </div>
+
+          {/* Featured checkbox */}
+          <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
+            <input
+              type="checkbox"
+              checked={form.featured}
+              onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+              className="w-4 h-4 rounded accent-yellow-500 cursor-pointer"
+            />
+            <span className="text-sm text-neutral-300">Show on homepage</span>
+          </label>
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 

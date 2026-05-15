@@ -55,6 +55,9 @@ export const translations = {
       gender_female: "Female",
       gender_other: "Other",
       gender_prefer_not: "Prefer not to say",
+      age_range: "Age Range",
+      age_range_placeholder: "— select —",
+      interested_event_types: "Interested Event Types",
       notes: "Notes",
       notes_placeholder: "Dietary requirements, experience level, etc.",
       required: "Required fields marked *",
@@ -82,6 +85,10 @@ export const translations = {
 5. MEDICAL CONDITION: I certify that I am physically fit, have sufficiently prepared for participation in the Activities, and have not been advised otherwise by a qualified medical professional.
 
 By signing below, I acknowledge that I have read this Waiver, Release, and Indemnification Agreement, fully understand its terms, and voluntarily agree to be bound by it.`,
+    },
+    gallery: {
+      other_group: "Other",
+      photo_count: (n: number) => `${n} photo${n !== 1 ? "s" : ""}`,
     },
     contact: {
       page_title: "Contact Us",
@@ -167,6 +174,9 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
       gender_female: "女",
       gender_other: "其他",
       gender_prefer_not: "不愿透露",
+      age_range: "年龄段",
+      age_range_placeholder: "— 请选择 —",
+      interested_event_types: "感兴趣的活动类型",
       notes: "备注",
       notes_placeholder: "饮食要求、运动经验等",
       required: "* 为必填项",
@@ -194,6 +204,10 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
 5. 健康状况：本人证明自己身体健康，已为参与活动做好充分准备，且未收到任何具有资质的医疗专业人员的相反建议。
 
 签署本声明即表示本人已阅读并完全理解本免责声明、豁免及赔偿协议的条款，并自愿同意受其约束。`,
+    },
+    gallery: {
+      other_group: "其他",
+      photo_count: (n: number) => `${n} 张`,
     },
     contact: {
       page_title: "联系我们",

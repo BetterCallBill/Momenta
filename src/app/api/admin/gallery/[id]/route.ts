@@ -15,6 +15,7 @@ export async function PUT(
       ...(body.alt !== undefined && { alt: body.alt }),
       ...(body.url !== undefined && { url: body.url }),
       ...(body.videoUrl !== undefined && { videoUrl: body.videoUrl }),
+      ...(body.eventName !== undefined && { eventName: body.eventName || null }),
     },
   });
 

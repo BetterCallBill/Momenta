@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { parseJsonArray, SPORT_LABELS } from "@/lib/types";
 import * as XLSX from "xlsx";
 
 export async function GET(req: NextRequest) {
@@ -13,16 +14,23 @@ export async function GET(req: NextRequest) {
     orderBy: { createdAt: "asc" },
   });
 
-  const rows = registrations.map((r, i) => ({
-    "#": i + 1,
-    Name: r.name,
-    Email: r.email,
-    Phone: r.phone,
-    Notes: r.notes ?? "",
-    Event: r.event.title,
-    "Event Date": new Date(r.event.startAt).toLocaleDateString("en-AU"),
-    "Registered At": new Date(r.createdAt).toLocaleString("en-AU"),
-  }));
+  const rows = registrations.map((r, i) => {
+    const interests = parseJsonArray(r.interestedEventTypes)
+      .map((k) => SPORT_LABELS[k] ?? k)
+      .join(", ");
+    return {
+      "#": i + 1,
+      Name: r.name,
+      Email: r.email,
+      Phone: r.phone,
+      "Age Range": r.ageRange ?? "",
+      "Interested Event Types": interests,
+      Notes: r.notes ?? "",
+      Event: r.event.title,
+      "Event Date": new Date(r.event.startAt).toLocaleDateString("en-AU"),
+      "Registered At": new Date(r.createdAt).toLocaleString("en-AU"),
+    };
+  });
 
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(rows);
@@ -30,7 +38,7 @@ export async function GET(req: NextRequest) {
   // Column widths
   ws["!cols"] = [
     { wch: 4 }, { wch: 20 }, { wch: 28 }, { wch: 16 },
-    { wch: 24 }, { wch: 36 }, { wch: 14 }, { wch: 20 },
+    { wch: 12 }, { wch: 30 }, { wch: 24 }, { wch: 36 }, { wch: 14 }, { wch: 20 },
   ];
 
   XLSX.utils.book_append_sheet(wb, ws, "Registrations");

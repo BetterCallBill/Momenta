@@ -29,6 +29,17 @@ export const SPORT_LABELS: Record<string, string> = {
   OTHER: "Other",
 };
 
+export const AGE_RANGE_OPTIONS = [
+  "Under 18",
+  "18–25",
+  "26–35",
+  "36–45",
+  "46–55",
+  "56+",
+] as const;
+
+export type AgeRange = (typeof AGE_RANGE_OPTIONS)[number];
+
 export const SPORT_ICONS: Record<string, string> = {
   RUNNING: "🏃",
   HIKING: "🥾",
@@ -36,6 +47,15 @@ export const SPORT_ICONS: Record<string, string> = {
   BJJ: "🥋",
   YOGA: "🧘",
   OTHER: "🎯",
+};
+
+export const SPORT_DOT_COLORS: Record<string, string> = {
+  RUNNING: "bg-sky-400",
+  HIKING: "bg-emerald-400",
+  GOLF: "bg-lime-400",
+  BJJ: "bg-red-400",
+  YOGA: "bg-violet-400",
+  OTHER: "bg-gold-500",
 };
 
 export interface InstagramPost {

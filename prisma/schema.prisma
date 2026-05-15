@@ -50,9 +50,11 @@ model Registration {
   gender          String?
   wechatName      String?
   wechatOpenId    String?
-  notes           String?
-  status          String   @default("confirmed")
-  stripeSessionId String?  @unique
+  notes                String?
+  ageRange             String?
+  interestedEventTypes String  @default("[]")
+  status               String  @default("confirmed")
+  stripeSessionId      String? @unique
   createdAt       DateTime @default(now())
 
   @@unique([email, eventId])
@@ -65,6 +67,7 @@ model GalleryImage {
   type      String   @default("image")
   videoUrl  String?
   tags      String   @default("[]")
+  eventName String?
   createdAt DateTime @default(now())
 }
 

@@ -17,39 +17,40 @@ export async function POST(request: NextRequest) {
     name,
     email,
     phone,
-    age,
+    ageRange,
     gender,
+    interestedEventTypes,
     wechatName,
     wechatOpenId,
     notes,
-  } = body as Record<string, string>;
+  } = body as Record<string, unknown>;
 
   // ── 2. Validate required fields ───────────────────────────────────────────
-  if (!eventId || !name || !email || !phone || !gender) {
+  if (!eventId || !name || !email || !phone || !gender || !ageRange) {
     return NextResponse.json(
-      { error: "Missing required fields: eventId, name, email, phone, gender" },
+      { error: "Missing required fields: eventId, name, email, phone, gender, ageRange" },
       { status: 400 }
     );
   }
 
-  const trimmedEmail = email.trim().toLowerCase();
-  const trimmedName = name.trim();
-  const trimmedPhone = phone.trim();
-  const parsedAge = age ? parseInt(String(age), 10) : undefined;
+  const trimmedEmail = (email as string).trim().toLowerCase();
+  const trimmedName = (name as string).trim();
+  const trimmedPhone = (phone as string).trim();
+  const trimmedAgeRange = (ageRange as string).trim();
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
   }
 
-  if (parsedAge !== undefined && (isNaN(parsedAge) || parsedAge < 10 || parsedAge > 120)) {
-    return NextResponse.json({ error: "Age must be between 10 and 120" }, { status: 400 });
-  }
+  const eventTypesArray = Array.isArray(interestedEventTypes) ? interestedEventTypes as string[] : [];
 
   // ── 3. DB operations ──────────────────────────────────────────────────────
   try {
+    const trimmedEventId = eventId as string;
+
     // Fetch event + count in one query
     const event = await prisma.event.findUnique({
-      where: { id: eventId },
+      where: { id: trimmedEventId },
       include: { _count: { select: { registrations: true } } },
     });
 
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     // Duplicate registration guard (DB-level unique constraint: email + eventId)
     const existing = await prisma.registration.findUnique({
-      where: { email_eventId: { email: trimmedEmail, eventId } },
+      where: { email_eventId: { email: trimmedEmail, eventId: trimmedEventId } },
     });
     if (existing) {
       return NextResponse.json(
@@ -82,39 +83,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const trimmedWechatOpenId = (wechatOpenId as string | undefined)?.trim() || null;
+    const trimmedWechatName = (wechatName as string | undefined)?.trim() || null;
+
     // Upsert user — match by wechatOpenId first, then email
     const user = await prisma.user.upsert({
-      where: wechatOpenId
-        ? { wechatOpenId }
+      where: trimmedWechatOpenId
+        ? { wechatOpenId: trimmedWechatOpenId }
         : { email: trimmedEmail },
       update: {
         name: trimmedName,
         phone: trimmedPhone,
-        ...(wechatName ? { wechatName } : {}),
-        ...(wechatOpenId ? { wechatOpenId } : {}),
+        ...(trimmedWechatName ? { wechatName: trimmedWechatName } : {}),
+        ...(trimmedWechatOpenId ? { wechatOpenId: trimmedWechatOpenId } : {}),
       },
       create: {
         email: trimmedEmail,
         name: trimmedName,
         phone: trimmedPhone,
-        wechatName: wechatName || null,
-        wechatOpenId: wechatOpenId || null,
+        wechatName: trimmedWechatName,
+        wechatOpenId: trimmedWechatOpenId,
       },
     });
 
     // Create the registration
     const registration = await prisma.registration.create({
       data: {
-        eventId,
+        eventId: trimmedEventId,
         userId: user.id,
         name: trimmedName,
         email: trimmedEmail,
         phone: trimmedPhone,
-        age: parsedAge ?? null,
-        gender: gender.trim(),
-        wechatName: wechatName?.trim() || null,
-        wechatOpenId: wechatOpenId?.trim() || null,
-        notes: notes?.trim() || null,
+        ageRange: trimmedAgeRange,
+        gender: (gender as string).trim(),
+        interestedEventTypes: JSON.stringify(eventTypesArray),
+        wechatName: (wechatName as string | undefined)?.trim() || null,
+        wechatOpenId: (wechatOpenId as string | undefined)?.trim() || null,
+        notes: (notes as string | undefined)?.trim() || null,
         status: "confirmed",
       },
       include: {
@@ -130,7 +135,7 @@ export async function POST(request: NextRequest) {
     sendConfirmationEmail({
       to: trimmedEmail,
       name: trimmedName,
-      wechatName: wechatName || null,
+      wechatName: trimmedWechatName,
       eventTitle: event.title,
       eventDate,
       eventLocation,
