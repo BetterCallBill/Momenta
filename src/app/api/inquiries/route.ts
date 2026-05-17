@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       phone: phone || null,
       inquiryType: inquiryType || "General",
       message,
+      submittedAt: inquiry.createdAt,
     }).catch((err) => console.error("[email] inquiry notification failed:", err));
 
     return NextResponse.json(inquiry, { status: 201 });
