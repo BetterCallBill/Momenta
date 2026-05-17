@@ -1,6 +1,6 @@
 # Task List — Momenta Events Platform
 
-> Sorted by priority (High → Medium → Low), then phase. Last updated: 2026-05-17.
+> Sorted by priority (High → Medium → Low), then phase. Last updated: 2026-05-18.
 
 ---
 
@@ -34,6 +34,7 @@
 | 13 | Calendar — enhance monthly grid with event dot indicators | 4.2 | 3 | Medium | ✅ Done | Merged via feature/monthly-calendar-dots-task-1; sport-colored dots (sky/emerald/lime/red/violet/gold), max 3 + overflow count, Sydney timezone fix |
 | 14 | Events page — two-column layout (calendar left, detail panel right) | 4.3 | 3 | Medium | ✅ Done | Merged via feature/events-two-column-task-1; EventsBrowser client component with interactive mini-calendar + EventDetailCard panel |
 | 15 | Event detail page — full-width poster banner | 9.1 | 3 | Medium | ✅ Done | Merged via feature/event-poster-banner-task-1; 60vh cinematic banner with overlaid title, sport badge, date/time, location |
+| 25 | Event detail page — full-viewport banner + description line break fix | 9.2 | 3 | Medium | ✅ Done | Merged via feature/event-detail-full-banner-task-1; h-dvh replaces 60vh; whitespace-pre-line fixes textarea line breaks; bg-linear-to-t + JSX cleanup |
 | 16 | Gallery admin — replace featured text input with boolean checkbox | 7.2 | 4 | Low | ✅ Done | Merged via feature/gallery-featured-checkbox-task-1; "Show on homepage" checkbox in add + edit forms; buildTags() merges state into tags JSON array |
 | 17 | Gallery — group images by event name in accordion layout | 7.3 | 4 | Low | ✅ Done | Merged via feature/gallery-event-name-task-1 + feature/gallery-accordion-task-2 |
 | 18 | Team public page — verify responsive card layout renders correctly | 8.1 | 4 | Low | 🔍 Verify | Admin CRUD done; confirm public `/about` or team route displays members sorted by `sortOrder` |
@@ -50,10 +51,10 @@
 
 | Status | Count |
 |---|---|
-| ✅ Done | 17 |
+| ✅ Done | 18 |
 | 🔍 Verify | 4 |
 | ⏳ Pending | 3 |
-| **Total** | **24** |
+| **Total** | **25** |
 
 ---
 
