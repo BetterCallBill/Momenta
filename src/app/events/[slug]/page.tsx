@@ -29,7 +29,7 @@ export default async function EventDetailPage({ params }: PageProps) {
       <Header />
       <main id="main-content">
         {/* Poster banner */}
-        <div className="relative w-full h-[60vh] min-h-105 max-h-175">
+        <div className="relative w-full h-dvh">
           {event.coverImageUrl ? (
             <Image
               src={event.coverImageUrl}
@@ -44,7 +44,7 @@ export default async function EventDetailPage({ params }: PageProps) {
           )}
 
           {/* Gradient: transparent top → deep black bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/55 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-brand-black via-brand-black/55 to-transparent" />
           {/* Subtle top vignette for header legibility */}
           <div className="absolute inset-0 bg-linear-to-b from-brand-black/40 to-transparent" />
 
@@ -88,7 +88,7 @@ export default async function EventDetailPage({ params }: PageProps) {
               <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
                 <span className="flex items-center gap-1.5">
                   <span aria-hidden="true">📅</span>
-                  {formatDateLong(new Date(event.startAt))}&ensp;·&ensp;
+                  {formatDateLong(new Date(event.startAt))}{" · "}
                   {formatTime(new Date(event.startAt))} – {formatTime(new Date(event.endAt))}
                 </span>
                 <span className="flex items-center gap-1.5">
@@ -149,7 +149,7 @@ export default async function EventDetailPage({ params }: PageProps) {
           {event.description && (
             <div className="mt-8">
               <h2 className="text-lg font-bold text-white mb-3">About this event</h2>
-              <p className="text-neutral-300 leading-relaxed whitespace-pre-wrap wrap-break-word">
+              <p className="text-neutral-300 leading-relaxed whitespace-pre-line wrap-break-word">
                 {event.description}
               </p>
             </div>
