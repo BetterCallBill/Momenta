@@ -128,6 +128,7 @@ export interface InquiryNotificationEmailData {
   phone: string | null;
   inquiryType: string;
   message: string;
+  submittedAt: Date;
 }
 
 export async function sendInquiryNotificationEmail(data: InquiryNotificationEmailData): Promise<void> {
@@ -136,7 +137,17 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
     return;
   }
 
-  const { to, name, email, phone, inquiryType, message } = data;
+  const { to, name, email, phone, inquiryType, message, submittedAt } = data;
+  const timestampStr = new Intl.DateTimeFormat("en-AU", {
+    timeZone: "Australia/Sydney",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(submittedAt) + " AEST";
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -164,7 +175,8 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
                     <p style="margin:0 0 6px;color:#a3a3a3;font-size:13px;"><span style="color:#ffffff;font-weight:600;">Name:</span> ${name}</p>
                     <p style="margin:0 0 6px;color:#a3a3a3;font-size:13px;"><span style="color:#ffffff;font-weight:600;">Email:</span> <a href="mailto:${email}" style="color:#f5c518;">${email}</a></p>
                     <p style="margin:0 0 6px;color:#a3a3a3;font-size:13px;"><span style="color:#ffffff;font-weight:600;">Phone:</span> ${phone || "—"}</p>
-                    <p style="margin:0 0 16px;color:#a3a3a3;font-size:13px;"><span style="color:#ffffff;font-weight:600;">Type:</span> ${inquiryType}</p>
+                    <p style="margin:0 0 6px;color:#a3a3a3;font-size:13px;"><span style="color:#ffffff;font-weight:600;">Type:</span> ${inquiryType}</p>
+                    <p style="margin:0 0 16px;color:#a3a3a3;font-size:13px;"><span style="color:#ffffff;font-weight:600;">Submitted:</span> ${timestampStr}</p>
                     <p style="margin:0 0 4px;color:#ffffff;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Message</p>
                     <p style="margin:0;color:#a3a3a3;font-size:13px;line-height:1.6;white-space:pre-wrap;">${message}</p>
                   </td>
@@ -190,6 +202,6 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
     replyTo: email,
     subject: `📩 New ${inquiryType} Inquiry from ${name}`,
     html,
-    text: `New inquiry from ${name} (${email})\nPhone: ${phone || "—"}\nType: ${inquiryType}\n\nMessage:\n${message}`,
+    text: `New inquiry from ${name} (${email})\nPhone: ${phone || "—"}\nType: ${inquiryType}\nSubmitted: ${timestampStr}\n\nMessage:\n${message}`,
   });
 }
