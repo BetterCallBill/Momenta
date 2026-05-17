@@ -19,6 +19,8 @@ export const translations = {
     footer: {
       tagline: "Sydney's most active Chinese outdoor community.",
       rights: "All rights reserved.",
+      quick_links: "Quick Links",
+      follow_us: "Follow Us",
     },
     common: {
       back_to_events: "Back to Events",
@@ -86,9 +88,21 @@ export const translations = {
 
 By signing below, I acknowledge that I have read this Waiver, Release, and Indemnification Agreement, fully understand its terms, and voluntarily agree to be bound by it.`,
     },
+    events: {
+      page_subtitle: "Find your next adventure.",
+      no_upcoming: "No upcoming events. Check back soon.",
+      all_events_back: "← All events",
+      no_events_day: "No events on this day",
+      upcoming: "Upcoming Events",
+      register: "Register",
+    },
     gallery: {
       other_group: "Other",
       photo_count: (n: number) => `${n} photo${n !== 1 ? "s" : ""}`,
+    },
+    home: {
+      contact_label: "Get in Touch",
+      contact_subtitle: "Questions, partnerships, or event ideas — we'd love to hear from you.",
     },
     contact: {
       page_title: "Contact Us",
@@ -118,6 +132,7 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
       form_success_title: "Message Sent!",
       form_success_body: "Thanks for reaching out. We'll get back to you soon.",
       form_error_generic: "Something went wrong. Please try again.",
+      form_optional: "(optional)",
     },
   },
   zh: {
@@ -138,6 +153,8 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
     footer: {
       tagline: "悉尼最活跃的华人户外社群。",
       rights: "版权所有。",
+      quick_links: "快捷链接",
+      follow_us: "关注我们",
     },
     common: {
       back_to_events: "返回活动列表",
@@ -205,9 +222,21 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
 
 签署本声明即表示本人已阅读并完全理解本免责声明、豁免及赔偿协议的条款，并自愿同意受其约束。`,
     },
+    events: {
+      page_subtitle: "探索您的下一次冒险。",
+      no_upcoming: "暂无即将到来的活动，请稍后查看。",
+      all_events_back: "← 所有活动",
+      no_events_day: "当天没有活动",
+      upcoming: "即将到来的活动",
+      register: "报名",
+    },
     gallery: {
       other_group: "其他",
       photo_count: (n: number) => `${n} 张`,
+    },
+    home: {
+      contact_label: "联系我们",
+      contact_subtitle: "活动咨询、合作洽谈或活动建议——欢迎随时联系我们。",
     },
     contact: {
       page_title: "联系我们",
@@ -237,6 +266,7 @@ By signing below, I acknowledge that I have read this Waiver, Release, and Indem
       form_success_title: "发送成功！",
       form_success_body: "感谢您的留言，我们将尽快与您联系。",
       form_error_generic: "出现错误，请重试。",
+      form_optional: "（选填）",
     },
   },
 } satisfies Record<Locale, unknown>;

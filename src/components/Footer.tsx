@@ -1,11 +1,7 @@
-import Link from "next/link";
+"use client";
 
-const LINKS = [
-  { href: "/events", label: "Events" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/about", label: "About Us" },
-  { href: "/contact", label: "Contact" },
-];
+import Link from "next/link";
+import { useLanguage } from "@/components/LanguageContext";
 
 const SOCIALS = [
   { href: "#", label: "Instagram", icon: "instagram" },
@@ -39,6 +35,15 @@ function SocialIcon({ icon }: { icon: string }) {
 }
 
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const LINKS = [
+    { href: "/events", label: t.nav.events },
+    { href: "/gallery", label: t.nav.gallery },
+    { href: "/about", label: t.nav.about },
+    { href: "/contact", label: t.nav.contact },
+  ];
+
   return (
     <footer className="border-t dark:border-neutral-800 border-neutral-200 dark:bg-brand-black bg-neutral-50">
       <div className="mx-auto max-w-7xl px-6 py-12">
@@ -49,14 +54,13 @@ export default function Footer() {
               <span className="dark:text-brand-white text-brand-black">omenta</span>
             </Link>
             <p className="mt-3 text-sm dark:text-brand-white/60 text-neutral-500 leading-relaxed">
-              Sydney&apos;s Chinese outdoor community. Running, hiking, golf, BJJ,
-              yoga and more.
+              {t.footer.tagline}
             </p>
           </div>
 
           <div>
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gold-500">
-              Quick Links
+              {t.footer.quick_links}
             </h3>
             <ul className="space-y-2">
               {LINKS.map((link) => (
@@ -74,7 +78,7 @@ export default function Footer() {
 
           <div>
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gold-500">
-              Follow Us
+              {t.footer.follow_us}
             </h3>
             <div className="flex gap-4">
               {SOCIALS.map((s) => (
@@ -94,7 +98,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 border-t dark:border-neutral-800 border-neutral-200 pt-6 text-center text-xs dark:text-brand-white/40 text-neutral-400">
-          &copy; {new Date().getFullYear()} Momenta. All rights reserved.
+          &copy; {new Date().getFullYear()} Momenta. {t.footer.rights}
         </div>
       </div>
     </footer>

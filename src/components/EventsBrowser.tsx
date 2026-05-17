@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SPORT_ICONS, SPORT_DOT_COLORS, SPORT_LABELS } from "@/lib/types";
 import { formatDate, formatTime } from "@/lib/dates";
 import type { EventWithCount } from "@/lib/types";
+import { useLanguage } from "@/components/LanguageContext";
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -40,6 +41,7 @@ interface Props {
 }
 
 export default function EventsBrowser({ events }: Props) {
+  const { t } = useLanguage();
   const now = new Date();
   const [calYear, setCalYear] = useState(now.getFullYear());
   const [calMonth, setCalMonth] = useState(now.getMonth());
@@ -83,13 +85,13 @@ export default function EventsBrowser({ events }: Props) {
     <div>
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white md:text-4xl">Events</h1>
-        <p className="mt-2 text-neutral-400">Find your next adventure.</p>
+        <h1 className="text-3xl font-bold text-white md:text-4xl">{t.nav.events}</h1>
+        <p className="mt-2 text-neutral-400">{t.events.page_subtitle}</p>
       </div>
 
       {events.length === 0 ? (
         <div className="py-24 text-center">
-          <p className="text-neutral-500">No upcoming events. Check back soon.</p>
+          <p className="text-neutral-500">{t.events.no_upcoming}</p>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[360px_1fr] items-start">
@@ -224,7 +226,7 @@ export default function EventsBrowser({ events }: Props) {
                     onClick={() => setSelectedKey(null)}
                     className="text-xs text-neutral-500 hover:text-white transition-colors"
                   >
-                    ← All events
+                    {t.events.all_events_back}
                   </button>
                 </div>
 
@@ -236,13 +238,13 @@ export default function EventsBrowser({ events }: Props) {
                   </div>
                 ) : (
                   <div className="flex h-40 items-center justify-center rounded-2xl border border-neutral-800">
-                    <p className="text-sm text-neutral-500">No events on this day</p>
+                    <p className="text-sm text-neutral-500">{t.events.no_events_day}</p>
                   </div>
                 )}
               </>
             ) : (
               <>
-                <p className="mb-4 text-sm font-semibold text-white">Upcoming Events</p>
+                <p className="mb-4 text-sm font-semibold text-white">{t.events.upcoming}</p>
                 <div className="space-y-4">
                   {events.map((ev) => (
                     <EventDetailCard key={ev.id} event={ev} />
@@ -258,6 +260,7 @@ export default function EventsBrowser({ events }: Props) {
 }
 
 function EventDetailCard({ event }: { event: EventWithCount }) {
+  const { t } = useLanguage();
   const spotsLeft = event.capacity - event._count.registrations;
   const isFull = spotsLeft <= 0;
 
@@ -272,7 +275,7 @@ function EventDetailCard({ event }: { event: EventWithCount }) {
             </span>
             {event.isFeatured && (
               <span className="rounded-full bg-gold-500/20 px-2 py-0.5 text-[10px] font-medium text-gold-400">
-                Featured
+                {t.common.featured}
               </span>
             )}
           </div>
@@ -297,11 +300,11 @@ function EventDetailCard({ event }: { event: EventWithCount }) {
 
           <div className="mt-3 flex items-center gap-4 text-sm">
             <span className={isFull ? "text-red-400" : "text-emerald-400"}>
-              {isFull ? "Full" : `${spotsLeft} spots left`}
+              {isFull ? t.common.event_full : t.common.spots_left(spotsLeft)}
             </span>
             <span className="text-neutral-500">
               {event.priceCents === 0
-                ? "Free"
+                ? t.common.free
                 : `$${(event.priceCents / 100).toFixed(2)}`}
             </span>
           </div>
@@ -317,7 +320,7 @@ function EventDetailCard({ event }: { event: EventWithCount }) {
               : "bg-gold-500 text-brand-black hover:bg-gold-400",
           ].join(" ")}
         >
-          {isFull ? "Full" : "Register"}
+          {isFull ? t.common.event_full : t.events.register}
         </Link>
       </div>
     </article>
