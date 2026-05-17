@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { SPORT_ICONS, SPORT_DOT_COLORS, SPORT_LABELS } from "@/lib/types";
 import { formatDate, formatTime } from "@/lib/dates";
@@ -265,11 +266,28 @@ function EventDetailCard({ event }: { event: EventWithCount }) {
   const isFull = spotsLeft <= 0;
 
   return (
-    <article className="rounded-xl border border-neutral-800 bg-neutral-900 p-5 transition-colors hover:border-neutral-700">
-      <div className="flex items-start gap-4">
+    <article className="rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden transition-colors hover:border-neutral-700">
+      <div className="flex gap-4 p-4">
+        {/* Thumbnail */}
+        <div className="relative shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-neutral-800">
+          {event.coverImageUrl ? (
+            <Image
+              src={event.coverImageUrl}
+              alt={event.title}
+              fill
+              className="object-cover"
+              sizes="96px"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-2xl" aria-hidden="true">
+              {SPORT_ICONS[event.sportType] ?? "🎯"}
+            </div>
+          )}
+        </div>
+
+        {/* Details */}
         <div className="min-w-0 flex-1">
-          <div className="mb-1.5 flex items-center gap-2">
-            <span aria-hidden="true">{SPORT_ICONS[event.sportType] ?? "🎯"}</span>
+          <div className="mb-1 flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-gold-500">
               {SPORT_LABELS[event.sportType] ?? event.sportType}
             </span>
@@ -281,47 +299,41 @@ function EventDetailCard({ event }: { event: EventWithCount }) {
           </div>
 
           <h3 className="text-base font-bold leading-snug text-white">
-            <Link
-              href={`/events/${event.slug}`}
-              className="hover:text-gold-400 transition-colors"
-            >
+            <Link href={`/events/${event.slug}`} className="hover:text-gold-400 transition-colors">
               {event.title}
             </Link>
           </h3>
 
-          <div className="mt-2 space-y-1 text-sm text-neutral-400">
+          <div className="mt-1.5 space-y-0.5 text-sm text-neutral-400">
             <p>
-              {formatDate(new Date(event.startAt as unknown as string))} &middot;{" "}
+              {formatDate(new Date(event.startAt as unknown as string))}{" · "}
               {formatTime(new Date(event.startAt as unknown as string))} –{" "}
               {formatTime(new Date(event.endAt as unknown as string))}
             </p>
             <p>{event.locationName}</p>
           </div>
 
-          <div className="mt-3 flex items-center gap-4 text-sm">
-            <span className={isFull ? "text-red-400" : "text-emerald-400"}>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <span className={`text-sm ${isFull ? "text-red-400" : "text-emerald-400"}`}>
               {isFull ? t.common.event_full : t.common.spots_left(spotsLeft)}
             </span>
-            <span className="text-neutral-500">
-              {event.priceCents === 0
-                ? t.common.free
-                : `$${(event.priceCents / 100).toFixed(2)}`}
+            <span className="text-sm text-neutral-500">
+              {event.priceCents === 0 ? t.common.free : `$${(event.priceCents / 100).toFixed(2)}`}
             </span>
+            <Link
+              href={isFull ? "#" : `/events/${event.slug}/register`}
+              aria-disabled={isFull}
+              className={[
+                "rounded-full px-4 py-1.5 text-xs font-semibold transition-colors",
+                isFull
+                  ? "cursor-not-allowed bg-neutral-700 text-neutral-400"
+                  : "bg-gold-500 text-brand-black hover:bg-gold-400",
+              ].join(" ")}
+            >
+              {isFull ? t.common.event_full : t.events.register}
+            </Link>
           </div>
         </div>
-
-        <Link
-          href={isFull ? "#" : `/events/${event.slug}/register`}
-          aria-disabled={isFull}
-          className={[
-            "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-            isFull
-              ? "cursor-not-allowed bg-neutral-700 text-neutral-400"
-              : "bg-gold-500 text-brand-black hover:bg-gold-400",
-          ].join(" ")}
-        >
-          {isFull ? t.common.event_full : t.events.register}
-        </Link>
       </div>
     </article>
   );
