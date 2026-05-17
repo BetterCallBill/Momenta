@@ -213,9 +213,6 @@ export default function AdminEventsPage() {
                                             Type
                                         </th>
                                         <th className='text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide'>
-                                            Description
-                                        </th>
-                                        <th className='text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide'>
                                             When / Where
                                         </th>
                                         <th className='text-left px-4 py-3 text-xs font-semibold text-neutral-400 uppercase tracking-wide'>
@@ -246,9 +243,6 @@ export default function AdminEventsPage() {
                                             </td>
                                             <td className='px-4 py-3 text-neutral-400 uppercase tracking-wide'>
                                                 {ev.sportType}
-                                            </td>
-                                            <td className='px-4 py-3 text-neutral-300 max-w-64 wrap-break-word whitespace-pre-wrap'>
-                                                {ev.description || '—'}
                                             </td>
                                             <td className='px-4 py-3 text-neutral-500'>
                                                 <div>{formatDate(ev.startAt)}</div>
