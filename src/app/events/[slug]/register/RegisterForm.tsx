@@ -184,28 +184,28 @@ export default function RegisterForm({ eventId, priceCents }: RegisterFormProps)
         </div>
       </div>
 
-      {/* ── Email ───────────────────────────────────────────────────── */}
-      <div>
-        <Label required>{t.register.email}</Label>
-        <input
-          name="email"
-          type="email"
-          required
-          className={inputCls}
-          placeholder={t.register.email_placeholder}
-        />
-      </div>
-
-      {/* ── Phone ───────────────────────────────────────────────────── */}
-      <div>
-        <Label required>{t.register.phone}</Label>
-        <input
-          name="phone"
-          type="tel"
-          required
-          className={inputCls}
-          placeholder={t.register.phone_placeholder}
-        />
+      {/* ── Email + Phone ───────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-2 sm:col-span-1">
+          <Label required>{t.register.email}</Label>
+          <input
+            name="email"
+            type="email"
+            required
+            className={inputCls}
+            placeholder={t.register.email_placeholder}
+          />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <Label required>{t.register.phone}</Label>
+          <input
+            name="phone"
+            type="tel"
+            required
+            className={inputCls}
+            placeholder={t.register.phone_placeholder}
+          />
+        </div>
       </div>
 
       {/* ── Gender ──────────────────────────────────────────────────── */}
