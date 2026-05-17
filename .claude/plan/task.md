@@ -1,6 +1,6 @@
 # Task List — Momenta Events Platform
 
-> Sorted by priority (High → Medium → Low), then phase. Last updated: 2026-05-14.
+> Sorted by priority (High → Medium → Low), then phase. Last updated: 2026-05-17.
 
 ---
 
@@ -38,6 +38,11 @@
 | 17 | Gallery — group images by event name in accordion layout | 7.3 | 4 | Low | ✅ Done | Merged via feature/gallery-event-name-task-1 + feature/gallery-accordion-task-2 |
 | 18 | Team public page — verify responsive card layout renders correctly | 8.1 | 4 | Low | 🔍 Verify | Admin CRUD done; confirm public `/about` or team route displays members sorted by `sortOrder` |
 | 19 | Instagram feed — verify API token not expired; add fallback | 10.1 | 4 | Low | 🔍 Verify | Token expires ~60 days; confirm "Follow Us" links to `@momenta_events_group` |
+| 20 | Translation: add i18n keys + wire Footer, EventsBrowser, HomeContactForm | 11.1 | 5 | Medium | ✅ Done | Merged via feature/translation-keys-task-1; events.*, footer.quick_links/follow_us, home.contact_*, contact.form_optional added (en + zh) |
+| 21 | Translation: wire About page (server/client split) | 11.2 | 5 | Medium | ⏳ Pending | Extract AboutPageClient; add about.* i18n keys |
+| 22 | Translation: wire event detail page (server/client split) | 11.3 | 5 | Medium | ⏳ Pending | Extract EventDetailClient; add event detail i18n keys |
+| 23 | Translation: admin editing UI (SiteContent DB model) | 11.4 | 5 | Medium | ⏳ Pending | Prisma SiteContent model, admin API routes, /admin/translations page |
+| 24 | Admin Enquiries page — list all contact form submissions | 1.2 | 1 | Medium | ✅ Done | Merged via feature/admin-enquiries-task-24; `GET /api/admin/enquiries` + `/admin/enquiries/page.tsx`; name, email, phone, type, message (truncated), Sydney timestamp; sidebar nav entry |
 
 ---
 
@@ -45,14 +50,15 @@
 
 | Status | Count |
 |---|---|
-| ✅ Done | 15 |
+| ✅ Done | 17 |
 | 🔍 Verify | 4 |
-| ⏳ Pending | 0 |
-| **Total** | **19** |
+| ⏳ Pending | 3 |
+| **Total** | **24** |
 
 ---
 
-## Next Up (Low Priority)
+## Next Up
 
-1. **Task 18** — Team public page: verify responsive card layout renders correctly
-2. **Task 19** — Instagram feed: verify API token not expired; add fallback
+1. **Task 21** — Translation: wire About page (server/client split + i18n)
+2. **Task 22** — Translation: wire event detail page
+3. **Task 23** — Translation: admin editing UI (SiteContent model)
