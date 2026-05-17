@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import RegisterForm from "./register/RegisterForm";
 import { prisma } from "@/lib/prisma";
 import { formatDateLong, formatTime } from "@/lib/dates";
 import { SPORT_LABELS, SPORT_ICONS } from "@/lib/types";
@@ -155,7 +156,7 @@ export default async function EventDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* CTA */}
+          {/* Registration */}
           <div className="mt-10">
             {isFull ? (
               <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-5 text-center">
@@ -163,12 +164,10 @@ export default async function EventDetailPage({ params }: PageProps) {
                 <p className="text-sm text-neutral-400 mt-1">Check back later or browse other events.</p>
               </div>
             ) : (
-              <Link
-                href={`/events/${event.slug}/register`}
-                className="btn-premium block rounded-full px-8 py-4 text-center text-base font-semibold"
-              >
-                Register Now{event.priceCents > 0 ? ` — $${(event.priceCents / 100).toFixed(2)}` : " — Free"}
-              </Link>
+              <div>
+                <h2 className="text-lg font-bold text-white mb-2">Register</h2>
+                <RegisterForm eventId={event.id} priceCents={event.priceCents} />
+              </div>
             )}
           </div>
         </div>

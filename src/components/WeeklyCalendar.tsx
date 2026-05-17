@@ -67,7 +67,7 @@ export default function WeeklyCalendar({ events }: WeeklyCalendarProps) {
                     return (
                       <Link
                         key={event.id}
-                        href={`/events/${event.slug}/register`}
+                        href={`/events/${event.slug}`}
                         className="group rounded-[8px] border dark:border-neutral-800 border-neutral-200 dark:bg-neutral-900/60 bg-white/60 backdrop-blur-sm p-3 transition-all duration-200 hover:border-gold-500/40 hover:shadow-[0_0_12px_rgba(212,160,23,0.06)]"
                       >
                         <div className="flex items-center gap-1.5">
@@ -139,7 +139,7 @@ export default function WeeklyCalendar({ events }: WeeklyCalendarProps) {
                     return (
                       <Link
                         key={event.id}
-                        href={`/events/${event.slug}/register`}
+                        href={`/events/${event.slug}`}
                         className="rounded-[8px] border dark:border-neutral-800 border-neutral-200 dark:bg-neutral-900/60 bg-white/60 backdrop-blur-sm p-3 transition-all duration-200 hover:border-gold-500/40"
                       >
                         <div className="flex items-center gap-1.5">

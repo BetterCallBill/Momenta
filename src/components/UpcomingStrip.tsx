@@ -77,7 +77,7 @@ export default function UpcomingStrip({ events }: UpcomingStripProps) {
                       {spotsLeft > 0 ? `${spotsLeft} spots left` : "Full"}
                     </span>
                     <Link
-                      href={`/events/${event.slug}/register`}
+                      href={`/events/${event.slug}`}
                       className="rounded-full bg-gold-500 px-4 py-1.5 text-xs font-semibold text-brand-black transition-colors hover:bg-gold-400"
                     >
                       Register

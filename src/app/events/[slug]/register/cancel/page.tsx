@@ -25,7 +25,7 @@ export default async function PaymentCancelPage({ params }: PageProps) {
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
-              href={`/events/${slug}/register`}
+              href={`/events/${slug}`}
               className="rounded-full bg-gold-500 px-8 py-3 text-sm font-semibold text-brand-black transition-colors hover:bg-gold-400"
             >
               Try Again

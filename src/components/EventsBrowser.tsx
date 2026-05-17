@@ -326,16 +326,10 @@ function EventDetailCard({ event }: { event: EventWithCount }) {
               {event.priceCents === 0 ? t.common.free : `$${(event.priceCents / 100).toFixed(2)}`}
             </span>
             <Link
-              href={isFull ? "#" : `/events/${event.slug}/register`}
-              aria-disabled={isFull}
-              className={[
-                "rounded-full px-4 py-1.5 text-xs font-semibold transition-colors",
-                isFull
-                  ? "cursor-not-allowed bg-neutral-700 text-neutral-400"
-                  : "bg-gold-500 text-brand-black hover:bg-gold-400",
-              ].join(" ")}
+              href={`/events/${event.slug}`}
+              className="rounded-full px-4 py-1.5 text-xs font-semibold transition-colors bg-gold-500 text-brand-black hover:bg-gold-400"
             >
-              {isFull ? t.common.event_full : t.events.register}
+              {t.events.register}
             </Link>
           </div>
         </div>

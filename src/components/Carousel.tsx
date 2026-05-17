@@ -70,7 +70,7 @@ export default function Carousel({ events }: CarouselProps) {
           {formatTime(new Date(event.startAt))} &middot; {event.locationName}
         </p>
         <Link
-          href={`/events/${event.slug}/register`}
+          href={`/events/${event.slug}`}
           className="mt-4 inline-block rounded-full bg-gold-500 px-6 py-2.5 text-sm font-semibold text-brand-black transition-colors hover:bg-gold-400"
         >
           Register
