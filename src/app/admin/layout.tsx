@@ -12,6 +12,7 @@ const navItems = [
   { href: "/admin/hero-slides", label: "Hero Slides" },
   { href: "/admin/sponsors", label: "Sponsors" },
   { href: "/admin/team", label: "Team" },
+  { href: "/admin/enquiries", label: "Enquiries" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
