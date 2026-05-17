@@ -95,7 +95,7 @@ export default function EventsBrowser({ events }: Props) {
           <p className="text-neutral-500">{t.events.no_upcoming}</p>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[360px_1fr] items-start">
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr] items-start">
           {/* ── LEFT: Calendar ── */}
           <div className="rounded-2xl border border-neutral-800 overflow-hidden">
             {/* Month nav */}
