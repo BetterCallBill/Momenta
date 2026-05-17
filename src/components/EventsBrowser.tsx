@@ -146,7 +146,7 @@ export default function EventsBrowser({ events }: Props) {
               {Array.from({ length: firstDow }).map((_, i) => (
                 <div
                   key={`empty-${i}`}
-                  className="h-10 border-b border-neutral-800/50 bg-neutral-950/50"
+                  className="min-h-20 border-b border-neutral-800/50 bg-neutral-950/50"
                 />
               ))}
 
@@ -159,6 +159,8 @@ export default function EventsBrowser({ events }: Props) {
                 const isSelected = selectedKey === key;
                 const colPos = (firstDow + i) % 7;
                 const isWeekend = colPos === 5 || colPos === 6;
+                const visibleEvents = dayEvents.slice(0, 2);
+                const overflow = dayEvents.length - visibleEvents.length;
 
                 return (
                   <button
@@ -166,7 +168,7 @@ export default function EventsBrowser({ events }: Props) {
                     disabled={!hasEvents}
                     onClick={() => setSelectedKey(isSelected ? null : key)}
                     className={[
-                      "h-10 border-b border-neutral-800/50 flex flex-col items-center justify-center gap-0.5 transition-colors",
+                      "min-h-20 border-b border-neutral-800/50 flex flex-col items-start p-1.5 transition-colors w-full",
                       isSelected
                         ? "bg-gold-500/10"
                         : isWeekend
@@ -177,7 +179,7 @@ export default function EventsBrowser({ events }: Props) {
                   >
                     <span
                       className={[
-                        "flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold leading-none",
+                        "flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold leading-none mb-1",
                         isToday
                           ? "bg-gold-500 text-brand-black"
                           : isSelected
@@ -190,13 +192,16 @@ export default function EventsBrowser({ events }: Props) {
                       {day}
                     </span>
                     {hasEvents && (
-                      <div className="flex gap-0.5">
-                        {dayEvents.slice(0, 3).map((ev) => (
-                          <span
-                            key={ev.id}
-                            className={`h-1 w-1 rounded-full ${SPORT_DOT_COLORS[ev.sportType] ?? "bg-gold-500"}`}
-                          />
+                      <div className="w-full space-y-0.5">
+                        {visibleEvents.map((ev) => (
+                          <div key={ev.id} className="flex items-center gap-1 rounded bg-neutral-700/50 px-1 py-0.5">
+                            <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${SPORT_DOT_COLORS[ev.sportType] ?? "bg-gold-500"}`} />
+                            <span className="truncate text-[10px] leading-tight text-white">{ev.title}</span>
+                          </div>
                         ))}
+                        {overflow > 0 && (
+                          <p className="px-1 text-[9px] font-medium text-gold-500/60">+{overflow} more</p>
+                        )}
                       </div>
                     )}
                   </button>
@@ -210,7 +215,7 @@ export default function EventsBrowser({ events }: Props) {
                 return Array.from({ length: 7 - remainder }).map((_, i) => (
                   <div
                     key={`trail-${i}`}
-                    className="h-10 border-b border-neutral-800/50 bg-neutral-950/50"
+                    className="min-h-20 border-b border-neutral-800/50 bg-neutral-950/50"
                   />
                 ));
               })()}
