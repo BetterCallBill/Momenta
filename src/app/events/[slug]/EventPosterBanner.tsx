@@ -73,7 +73,7 @@ export default function EventPosterBanner({
                 />
 
                 {/* Gradient: transparent top → deep black bottom */}
-                <div className='absolute inset-0 bg-linear-to-t from-brand-black via-brand-black/55 to-transparent' />
+                <div className='absolute inset-0' />
                 {/* Subtle top vignette for header legibility */}
                 <div className='absolute inset-0 bg-linear-to-b from-brand-black/40 to-transparent' />
 

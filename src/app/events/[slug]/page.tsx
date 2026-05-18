@@ -38,7 +38,7 @@ export default async function EventDetailPage({ params }: PageProps) {
         />
 
         {/* Detail body */}
-        <div className="mx-auto max-w-3xl px-6 pt-10 pb-24 md:px-0">
+        <div className="mx-auto max-w-3xl px-6 pb-24 md:px-0">
           {/* Meta cards */}
           <div className="grid gap-3 sm:grid-cols-2 text-sm">
             <div className="flex items-start gap-3 rounded-xl bg-neutral-900 border border-neutral-800 p-4">
