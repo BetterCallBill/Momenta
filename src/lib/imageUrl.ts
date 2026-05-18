@@ -11,3 +11,7 @@ export function resolveImageUrl(url: string): string {
 
   return url;
 }
+
+export function isVideo(url: string): boolean {
+  return /\.(mp4|webm|mov|avi|mkv)(\?.*)?$/i.test(url);
+}
