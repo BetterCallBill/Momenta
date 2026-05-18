@@ -11,22 +11,40 @@ export type EventWithCount = Event & {
 export type SportTypeValue =
   | "RUNNING"
   | "HIKING"
-  | "GOLF"
+  | "DANCE"
   | "BJJ"
-  | "YOGA"
-  | "OTHER";
+  | "SANDA"
+  | "INDOOR_CYCLING"
+  | "KAYAK"
+  | "BADMINTON"
+  | "TENNIS";
 
 export type SportTypeFilter = "ALL" | SportTypeValue;
 
 export type DateRangeFilter = "this-week" | "next-week" | "this-month";
 
+export const SPORT_TYPES: SportTypeValue[] = [
+  "RUNNING",
+  "HIKING",
+  "DANCE",
+  "BJJ",
+  "SANDA",
+  "INDOOR_CYCLING",
+  "KAYAK",
+  "BADMINTON",
+  "TENNIS",
+];
+
 export const SPORT_LABELS: Record<string, string> = {
   RUNNING: "Running",
   HIKING: "Hiking",
-  GOLF: "Golf",
+  DANCE: "Dance",
   BJJ: "BJJ",
-  YOGA: "Yoga",
-  OTHER: "Other",
+  SANDA: "Sanda",
+  INDOOR_CYCLING: "Indoor Cycling",
+  KAYAK: "Kayak",
+  BADMINTON: "Badminton",
+  TENNIS: "Tennis",
 };
 
 export const AGE_RANGE_OPTIONS = [
@@ -43,19 +61,25 @@ export type AgeRange = (typeof AGE_RANGE_OPTIONS)[number];
 export const SPORT_ICONS: Record<string, string> = {
   RUNNING: "🏃",
   HIKING: "🥾",
-  GOLF: "⛳",
+  DANCE: "💃",
   BJJ: "🥋",
-  YOGA: "🧘",
-  OTHER: "🎯",
+  SANDA: "🥊",
+  INDOOR_CYCLING: "🚴",
+  KAYAK: "🛶",
+  BADMINTON: "🏸",
+  TENNIS: "🎾",
 };
 
 export const SPORT_DOT_COLORS: Record<string, string> = {
   RUNNING: "bg-sky-400",
   HIKING: "bg-emerald-400",
-  GOLF: "bg-lime-400",
+  DANCE: "bg-pink-400",
   BJJ: "bg-red-400",
-  YOGA: "bg-violet-400",
-  OTHER: "bg-gold-500",
+  SANDA: "bg-orange-400",
+  INDOOR_CYCLING: "bg-cyan-400",
+  KAYAK: "bg-blue-400",
+  BADMINTON: "bg-yellow-400",
+  TENNIS: "bg-green-400",
 };
 
 export interface InstagramPost {
