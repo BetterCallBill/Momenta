@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendConfirmationEmail } from "@/lib/email";
+import { formatDate, formatTime } from "@/lib/dates";
 
 export async function POST(request: NextRequest) {
   // ── 1. Parse body ─────────────────────────────────────────────────────────
@@ -125,6 +127,16 @@ export async function POST(request: NextRequest) {
         user: { select: { id: true, email: true } },
       },
     });
+
+    sendConfirmationEmail({
+      to: trimmedEmail,
+      name: trimmedName,
+      wechatName: trimmedWechatName,
+      eventTitle: registration.event.title,
+      eventDate: `${formatDate(registration.event.startAt)} at ${formatTime(registration.event.startAt)}`,
+      eventLocation: registration.event.locationName || registration.event.address || "",
+      priceCents: registration.event.priceCents,
+    }).catch((err) => console.error("[email]", err));
 
     return NextResponse.json(registration, { status: 201 });
   } catch (err) {

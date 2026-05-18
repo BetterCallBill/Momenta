@@ -6,12 +6,13 @@ let _transporter: nodemailer.Transporter | null = null;
 function getTransporter() {
   if (!_transporter) {
     _transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // STARTTLS
+      service: "gmail",
       auth: {
+        type: "OAuth2",
         user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD, // Gmail App Password (not account password)
+        clientId: process.env.GMAIL_OAUTH_CLIENT_ID,
+        clientSecret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
+        refreshToken: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
       },
     });
   }
@@ -29,8 +30,8 @@ export interface ConfirmationEmailData {
 }
 
 export async function sendConfirmationEmail(data: ConfirmationEmailData): Promise<void> {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    console.warn("[email] GMAIL_USER or GMAIL_APP_PASSWORD not set — skipping email");
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_OAUTH_CLIENT_ID || !process.env.GMAIL_OAUTH_CLIENT_SECRET || !process.env.GMAIL_OAUTH_REFRESH_TOKEN) {
+    console.warn("[email] Gmail OAuth env vars not set — skipping email");
     return;
   }
 
@@ -132,8 +133,8 @@ export interface InquiryNotificationEmailData {
 }
 
 export async function sendInquiryNotificationEmail(data: InquiryNotificationEmailData): Promise<void> {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    console.warn("[email] GMAIL_USER or GMAIL_APP_PASSWORD not set — skipping email");
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_OAUTH_CLIENT_ID || !process.env.GMAIL_OAUTH_CLIENT_SECRET || !process.env.GMAIL_OAUTH_REFRESH_TOKEN) {
+    console.warn("[email] Gmail OAuth env vars not set — skipping email");
     return;
   }
 
