@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { resolveImageUrl } from "@/lib/imageUrl";
 
 type GalleryItem = {
   id: string;
@@ -181,7 +180,7 @@ export default function AdminGalleryPage() {
                     <>
                       {item.url ? (
                         <Image
-                          src={resolveImageUrl(item.url)}
+                          src={item.url}
                           alt={item.alt}
                           fill
                           className="object-cover opacity-70"
@@ -192,7 +191,7 @@ export default function AdminGalleryPage() {
                     </>
                   ) : (
                     <Image
-                      src={resolveImageUrl(item.url)}
+                      src={item.url}
                       alt={item.alt}
                       fill
                       className="object-cover"
