@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import GalleryAccordion from "@/components/GalleryAccordion";
 import type { GalleryGroup } from "@/components/GalleryAccordion";
 import { prisma } from "@/lib/prisma";
+import { SPORT_TYPES, SPORT_LABELS } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -11,24 +12,25 @@ export default async function GalleryPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  // Group images by eventName; unnamed images collected separately
-  const namedMap = new Map<string, typeof images>();
-  const unnamed: typeof images = [];
+  // Group by sport type (stored in the tags field)
+  const sportMap = new Map<string, typeof images>();
+  const untyped: typeof images = [];
 
   for (const image of images) {
-    if (image.eventName) {
-      if (!namedMap.has(image.eventName)) namedMap.set(image.eventName, []);
-      namedMap.get(image.eventName)!.push(image);
+    const key = image.tags;
+    if (key && SPORT_LABELS[key]) {
+      if (!sportMap.has(key)) sportMap.set(key, []);
+      sportMap.get(key)!.push(image);
     } else {
-      unnamed.push(image);
+      untyped.push(image);
     }
   }
 
   const groups: GalleryGroup[] = [
-    ...Array.from(namedMap.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([name, imgs]) => ({ name, images: imgs })),
-    ...(unnamed.length > 0 ? [{ name: null, images: unnamed }] : []),
+    ...SPORT_TYPES
+      .filter((st) => sportMap.has(st))
+      .map((st) => ({ sportType: st, images: sportMap.get(st)! })),
+    ...(untyped.length > 0 ? [{ sportType: null, images: untyped }] : []),
   ];
 
   return (
