@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import type { GalleryImage } from "@/lib/types";
+import { SPORT_LABELS, SPORT_ICONS } from "@/lib/types";
 import { useLanguage } from "@/components/LanguageContext";
 import GalleryGrid from "./GalleryGrid";
 
 export type GalleryGroup = {
-  name: string | null;
+  sportType: string | null;
   images: GalleryImage[];
 };
 
@@ -28,7 +29,10 @@ export default function GalleryAccordion({ groups }: GalleryAccordionProps) {
     <div className="space-y-6">
       {groups.map((group, i) => {
         const isOpen = open[i] ?? true;
-        const label = group.name ?? t.gallery.other_group;
+        const icon = group.sportType ? (SPORT_ICONS[group.sportType] ?? "") : "";
+        const label = group.sportType
+          ? (SPORT_LABELS[group.sportType] ?? group.sportType)
+          : t.gallery.other_group;
         const count = group.images.length;
 
         return (
@@ -40,6 +44,7 @@ export default function GalleryAccordion({ groups }: GalleryAccordionProps) {
               aria-expanded={isOpen}
             >
               <div className="flex items-center gap-3">
+                {icon && <span className="text-xl" aria-hidden="true">{icon}</span>}
                 <h2 className="text-lg font-semibold text-brand-white">{label}</h2>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-400 font-medium">
                   {t.gallery.photo_count(count)}

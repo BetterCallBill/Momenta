@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { resolveImageUrl } from "@/lib/imageUrl";
+import { SPORT_TYPES, SPORT_LABELS, SPORT_ICONS } from "@/lib/types";
 
 type GalleryItem = {
   id: string;
@@ -15,40 +16,24 @@ type GalleryItem = {
   createdAt: string;
 };
 
-const EMPTY_FORM = {
+const EMPTY_FORM: {
+  type: string;
+  url: string;
+  videoUrl: string;
+  sportType: string;
+  eventName: string;
+} = {
   type: "image",
   url: "",
   videoUrl: "",
-  alt: "",
-  tags: "",
-  featured: false,
+  sportType: SPORT_TYPES[0],
   eventName: "",
 };
-
-function parseTags(raw: string): string[] {
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function buildTags(tagsInput: string, featured: boolean): string {
-  const other = tagsInput
-    .split(",")
-    .map((t) => t.trim())
-    .filter((t) => Boolean(t) && t !== "featured");
-  const result = featured ? ["featured", ...other] : other;
-  return JSON.stringify(result);
-}
 
 type EditForm = {
   url: string;
   videoUrl: string;
-  alt: string;
-  tags: string;
-  featured: boolean;
+  sportType: string;
   eventName: string;
 };
 
@@ -58,7 +43,7 @@ export default function AdminGalleryPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<EditForm>({ url: "", videoUrl: "", alt: "", tags: "", featured: false, eventName: "" });
+  const [editForm, setEditForm] = useState<EditForm>({ url: "", videoUrl: "", sportType: SPORT_TYPES[0], eventName: "" });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState("");
 
@@ -79,11 +64,10 @@ export default function AdminGalleryPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         url: form.url,
-        alt: form.alt,
         type: form.type,
         videoUrl: form.type === "video" ? form.videoUrl || null : null,
-        tags: buildTags(form.tags, form.featured),
-        eventName: form.eventName || null,
+        sportType: form.sportType,
+        eventName: form.eventName,
       }),
     });
 
@@ -100,20 +84,17 @@ export default function AdminGalleryPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this image?")) return;
+    if (!confirm("Delete this item?")) return;
     await fetch(`/api/admin/gallery/${id}`, { method: "DELETE" });
     load();
   }
 
   function startEdit(item: GalleryItem) {
-    const tags = parseTags(item.tags);
     setEditingId(item.id);
     setEditForm({
       url: item.url,
       videoUrl: item.videoUrl ?? "",
-      alt: item.alt,
-      tags: tags.filter((t) => t !== "featured").join(", "),
-      featured: tags.includes("featured"),
+      sportType: item.tags || SPORT_TYPES[0],
       eventName: item.eventName ?? "",
     });
     setEditError("");
@@ -133,9 +114,8 @@ export default function AdminGalleryPage() {
       body: JSON.stringify({
         url: editForm.url,
         videoUrl: editForm.videoUrl || null,
-        alt: editForm.alt,
-        tags: buildTags(editForm.tags, editForm.featured),
-        eventName: editForm.eventName || null,
+        sportType: editForm.sportType,
+        eventName: editForm.eventName,
       }),
     });
     setEditLoading(false);
@@ -152,20 +132,18 @@ export default function AdminGalleryPage() {
     <div>
       <h1 className="text-2xl font-bold text-white mb-1">Gallery</h1>
       <p className="text-sm text-neutral-400 mb-8">
-        Manage gallery images and videos. Items marked{" "}
-        <span className="text-gold-400 font-medium">Show on homepage</span> appear in the Previous Events wall.
+        Manage gallery images and videos, grouped by sport type.
       </p>
 
-      {/* Image list */}
+      {/* Item list */}
       <div className="space-y-3 mb-10">
         {items.length === 0 && (
           <p className="text-sm text-neutral-500">No gallery items yet.</p>
         )}
         {items.map((item) => {
-          const tags = parseTags(item.tags);
-          const isFeatured = tags.includes("featured");
-          const otherTags = tags.filter((t) => t !== "featured");
-
+          const sportType = item.tags;
+          const icon = SPORT_ICONS[sportType] ?? "🎯";
+          const label = SPORT_LABELS[sportType] ?? sportType;
           const isEditing = editingId === item.id;
 
           return (
@@ -204,24 +182,16 @@ export default function AdminGalleryPage() {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-semibold text-white truncate">{item.alt}</p>
+                    <p className="text-sm font-semibold text-white truncate">
+                      {item.eventName || item.alt}
+                    </p>
                     <span className="text-xs px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400 uppercase tracking-wide">
                       {item.type}
                     </span>
-                    {isFeatured && (
-                      <span className="text-xs px-1.5 py-0.5 rounded bg-gold-500/20 text-gold-400 font-medium">
-                        首页展示
-                      </span>
-                    )}
                   </div>
-                  {item.eventName && (
-                    <p className="text-xs text-neutral-400 mt-0.5">
-                      <span className="text-neutral-600">Event: </span>{item.eventName}
-                    </p>
-                  )}
-                  {otherTags.length > 0 && (
-                    <p className="text-xs text-neutral-500 mt-0.5">{otherTags.join(", ")}</p>
-                  )}
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    {icon} {label}
+                  </p>
                   <p className="text-xs text-neutral-700 mt-0.5 truncate">{item.url}</p>
                 </div>
 
@@ -273,51 +243,28 @@ export default function AdminGalleryPage() {
                       </div>
                     )}
                     <div>
-                      <label className="block text-xs font-medium text-neutral-400 mb-1">Alt Text</label>
-                      <input
-                        type="text"
-                        value={editForm.alt}
-                        onChange={(e) => setEditForm({ ...editForm, alt: e.target.value })}
-                        className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
-                      />
+                      <label className="block text-xs font-medium text-neutral-400 mb-1">Sport Type</label>
+                      <select
+                        value={editForm.sportType}
+                        onChange={(e) => setEditForm({ ...editForm, sportType: e.target.value })}
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500"
+                      >
+                        {SPORT_TYPES.map((t) => (
+                          <option key={t} value={t}>{SPORT_ICONS[t]} {SPORT_LABELS[t]}</option>
+                        ))}
+                      </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-neutral-400 mb-1">
-                        Tags <span className="text-neutral-600">(comma separated)</span>
-                      </label>
+                      <label className="block text-xs font-medium text-neutral-400 mb-1">Event Name</label>
                       <input
                         type="text"
-                        value={editForm.tags}
-                        onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })}
+                        value={editForm.eventName}
+                        onChange={(e) => setEditForm({ ...editForm, eventName: e.target.value })}
+                        placeholder="e.g. Centennial Park Run 2025"
                         className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
                       />
                     </div>
                   </div>
-
-                  {/* Event Name */}
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-400 mb-1">
-                      Event Name <span className="text-neutral-600">(optional — used to group images in gallery)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={editForm.eventName}
-                      onChange={(e) => setEditForm({ ...editForm, eventName: e.target.value })}
-                      placeholder="e.g. Centennial Park Run 2025"
-                      className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
-                    />
-                  </div>
-
-                  {/* Featured checkbox */}
-                  <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
-                    <input
-                      type="checkbox"
-                      checked={editForm.featured}
-                      onChange={(e) => setEditForm({ ...editForm, featured: e.target.checked })}
-                      className="w-4 h-4 rounded accent-yellow-500 cursor-pointer"
-                    />
-                    <span className="text-sm text-neutral-300">Show on homepage</span>
-                  </label>
 
                   {editError && <p className="text-xs text-red-400">{editError}</p>}
                   <button
@@ -369,16 +316,14 @@ export default function AdminGalleryPage() {
                 required
                 value={form.url}
                 onChange={(e) => setForm({ ...form, url: e.target.value })}
-                placeholder="/images/yoga/_DSC0249.JPG or https://..."
+                placeholder="https://... or /images/..."
                 className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
               />
             </div>
 
             {form.type === "video" && (
               <div>
-                <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-                  Video URL
-                </label>
+                <label className="block text-xs font-medium text-neutral-400 mb-1.5">Video URL</label>
                 <input
                   type="text"
                   value={form.videoUrl}
@@ -390,58 +335,30 @@ export default function AdminGalleryPage() {
             )}
 
             <div>
-              <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-                Alt Text
-              </label>
-              <input
-                type="text"
-                required
-                value={form.alt}
-                onChange={(e) => setForm({ ...form, alt: e.target.value })}
-                placeholder="Group yoga session at Hyde Park"
-                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
-              />
+              <label className="block text-xs font-medium text-neutral-400 mb-1.5">Sport Type</label>
+              <select
+                value={form.sportType}
+                onChange={(e) => setForm({ ...form, sportType: e.target.value })}
+                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500"
+              >
+                {SPORT_TYPES.map((t) => (
+                  <option key={t} value={t}>{SPORT_ICONS[t]} {SPORT_LABELS[t]}</option>
+                ))}
+              </select>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-                Tags{" "}
-                <span className="text-neutral-600">(comma separated)</span>
-              </label>
+              <label className="block text-xs font-medium text-neutral-400 mb-1.5">Event Name</label>
               <input
                 type="text"
-                value={form.tags}
-                onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                placeholder="yoga, running"
+                required
+                value={form.eventName}
+                onChange={(e) => setForm({ ...form, eventName: e.target.value })}
+                placeholder="e.g. Centennial Park Run 2025"
                 className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
               />
             </div>
           </div>
-
-          {/* Event Name */}
-          <div>
-            <label className="block text-xs font-medium text-neutral-400 mb-1.5">
-              Event Name <span className="text-neutral-600">(optional — used to group images in gallery)</span>
-            </label>
-            <input
-              type="text"
-              value={form.eventName}
-              onChange={(e) => setForm({ ...form, eventName: e.target.value })}
-              placeholder="e.g. Centennial Park Run 2025"
-              className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold-500"
-            />
-          </div>
-
-          {/* Featured checkbox */}
-          <label className="flex items-center gap-2.5 cursor-pointer select-none w-fit">
-            <input
-              type="checkbox"
-              checked={form.featured}
-              onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-              className="w-4 h-4 rounded accent-yellow-500 cursor-pointer"
-            />
-            <span className="text-sm text-neutral-300">Show on homepage</span>
-          </label>
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 

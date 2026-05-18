@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { TZ as SYDNEY_TZ } from '@/lib/dates';
+import { SPORT_TYPES, SPORT_LABELS } from '@/lib/types';
 
 type Event = {
     id: string;
@@ -19,8 +20,6 @@ type Event = {
     coverImageUrl: string;
     _count: { registrations: number };
 };
-
-const SPORT_TYPES = ['RUNNING', 'HIKING', 'YOGA', 'BJJ', 'GOLF', 'CROSSFIT', 'MARTIAL_ARTS', 'OTHER'];
 
 // Convert a UTC ISO string to "YYYY-MM-DDTHH:MM" in Sydney time (for datetime-local inputs).
 function toSydneyDatetime(iso: string): string {
@@ -63,7 +62,7 @@ function slugify(title: string): string {
 const EMPTY_FORM = {
     title: '',
     slug: '',
-    sportType: 'OTHER',
+    sportType: 'RUNNING',
     description: '',
     startAt: '',
     endAt: '',
@@ -321,7 +320,7 @@ export default function AdminEventsPage() {
                                     className='w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500'>
                                     {SPORT_TYPES.map(t => (
                                         <option key={t} value={t}>
-                                            {t}
+                                            {SPORT_LABELS[t]}
                                         </option>
                                     ))}
                                 </select>
