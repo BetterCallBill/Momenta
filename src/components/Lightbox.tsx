@@ -80,6 +80,8 @@ export default function Lightbox({
             src={image.videoUrl}
             controls
             autoPlay
+            muted
+            playsInline
             className="max-h-[80vh] w-auto rounded-lg"
           />
         ) : (
