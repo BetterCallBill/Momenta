@@ -10,20 +10,20 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { url, alt, type, videoUrl, tags, eventName } = body;
+  const { url, eventName, sportType, type, videoUrl } = body;
 
-  if (!url || !alt) {
-    return NextResponse.json({ error: "url and alt are required" }, { status: 400 });
+  if (!url || !eventName) {
+    return NextResponse.json({ error: "url and eventName are required" }, { status: 400 });
   }
 
   const image = await prisma.galleryImage.create({
     data: {
       url,
-      alt,
+      alt: eventName,
       type: type ?? "image",
       videoUrl: videoUrl || null,
-      tags: tags ?? "[]",
-      eventName: eventName || null,
+      tags: sportType ?? "",
+      eventName: eventName,
     },
   });
 

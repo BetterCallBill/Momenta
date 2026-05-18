@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { SPORT_ICONS, SPORT_DOT_COLORS, SPORT_LABELS } from "@/lib/types";
 import { formatDate, formatTime } from "@/lib/dates";
 import type { EventWithCount } from "@/lib/types";
+import { useLanguage } from "@/components/LanguageContext";
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -40,6 +42,7 @@ interface Props {
 }
 
 export default function EventsBrowser({ events }: Props) {
+  const { t } = useLanguage();
   const now = new Date();
   const [calYear, setCalYear] = useState(now.getFullYear());
   const [calMonth, setCalMonth] = useState(now.getMonth());
@@ -83,16 +86,16 @@ export default function EventsBrowser({ events }: Props) {
     <div>
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white md:text-4xl">Events</h1>
-        <p className="mt-2 text-neutral-400">Find your next adventure.</p>
+        <h1 className="text-3xl font-bold text-white md:text-4xl">{t.nav.events}</h1>
+        <p className="mt-2 text-neutral-400">{t.events.page_subtitle}</p>
       </div>
 
       {events.length === 0 ? (
         <div className="py-24 text-center">
-          <p className="text-neutral-500">No upcoming events. Check back soon.</p>
+          <p className="text-neutral-500">{t.events.no_upcoming}</p>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[360px_1fr] items-start">
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr] items-start">
           {/* ── LEFT: Calendar ── */}
           <div className="rounded-2xl border border-neutral-800 overflow-hidden">
             {/* Month nav */}
@@ -143,7 +146,7 @@ export default function EventsBrowser({ events }: Props) {
               {Array.from({ length: firstDow }).map((_, i) => (
                 <div
                   key={`empty-${i}`}
-                  className="h-10 border-b border-neutral-800/50 bg-neutral-950/50"
+                  className="min-h-20 border-b border-neutral-800/50 bg-neutral-950/50"
                 />
               ))}
 
@@ -156,6 +159,8 @@ export default function EventsBrowser({ events }: Props) {
                 const isSelected = selectedKey === key;
                 const colPos = (firstDow + i) % 7;
                 const isWeekend = colPos === 5 || colPos === 6;
+                const visibleEvents = dayEvents.slice(0, 2);
+                const overflow = dayEvents.length - visibleEvents.length;
 
                 return (
                   <button
@@ -163,7 +168,7 @@ export default function EventsBrowser({ events }: Props) {
                     disabled={!hasEvents}
                     onClick={() => setSelectedKey(isSelected ? null : key)}
                     className={[
-                      "h-10 border-b border-neutral-800/50 flex flex-col items-center justify-center gap-0.5 transition-colors",
+                      "min-h-20 border-b border-neutral-800/50 flex flex-col items-start p-1.5 transition-colors w-full",
                       isSelected
                         ? "bg-gold-500/10"
                         : isWeekend
@@ -174,7 +179,7 @@ export default function EventsBrowser({ events }: Props) {
                   >
                     <span
                       className={[
-                        "flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold leading-none",
+                        "flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold leading-none mb-1",
                         isToday
                           ? "bg-gold-500 text-brand-black"
                           : isSelected
@@ -187,13 +192,16 @@ export default function EventsBrowser({ events }: Props) {
                       {day}
                     </span>
                     {hasEvents && (
-                      <div className="flex gap-0.5">
-                        {dayEvents.slice(0, 3).map((ev) => (
-                          <span
-                            key={ev.id}
-                            className={`h-1 w-1 rounded-full ${SPORT_DOT_COLORS[ev.sportType] ?? "bg-gold-500"}`}
-                          />
+                      <div className="w-full space-y-0.5">
+                        {visibleEvents.map((ev) => (
+                          <div key={ev.id} className="flex items-center gap-1 rounded bg-neutral-700/50 px-1 py-0.5">
+                            <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${SPORT_DOT_COLORS[ev.sportType] ?? "bg-gold-500"}`} />
+                            <span className="truncate text-[10px] leading-tight text-white">{ev.title}</span>
+                          </div>
                         ))}
+                        {overflow > 0 && (
+                          <p className="px-1 text-[9px] font-medium text-gold-500/60">+{overflow} more</p>
+                        )}
                       </div>
                     )}
                   </button>
@@ -207,7 +215,7 @@ export default function EventsBrowser({ events }: Props) {
                 return Array.from({ length: 7 - remainder }).map((_, i) => (
                   <div
                     key={`trail-${i}`}
-                    className="h-10 border-b border-neutral-800/50 bg-neutral-950/50"
+                    className="min-h-20 border-b border-neutral-800/50 bg-neutral-950/50"
                   />
                 ));
               })()}
@@ -224,7 +232,7 @@ export default function EventsBrowser({ events }: Props) {
                     onClick={() => setSelectedKey(null)}
                     className="text-xs text-neutral-500 hover:text-white transition-colors"
                   >
-                    ← All events
+                    {t.events.all_events_back}
                   </button>
                 </div>
 
@@ -236,13 +244,13 @@ export default function EventsBrowser({ events }: Props) {
                   </div>
                 ) : (
                   <div className="flex h-40 items-center justify-center rounded-2xl border border-neutral-800">
-                    <p className="text-sm text-neutral-500">No events on this day</p>
+                    <p className="text-sm text-neutral-500">{t.events.no_events_day}</p>
                   </div>
                 )}
               </>
             ) : (
               <>
-                <p className="mb-4 text-sm font-semibold text-white">Upcoming Events</p>
+                <p className="mb-4 text-sm font-semibold text-white">{t.events.upcoming}</p>
                 <div className="space-y-4">
                   {events.map((ev) => (
                     <EventDetailCard key={ev.id} event={ev} />
@@ -258,67 +266,73 @@ export default function EventsBrowser({ events }: Props) {
 }
 
 function EventDetailCard({ event }: { event: EventWithCount }) {
+  const { t } = useLanguage();
   const spotsLeft = event.capacity - event._count.registrations;
   const isFull = spotsLeft <= 0;
 
   return (
-    <article className="rounded-xl border border-neutral-800 bg-neutral-900 p-5 transition-colors hover:border-neutral-700">
-      <div className="flex items-start gap-4">
+    <article className="rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden transition-colors hover:border-neutral-700">
+      <div className="flex gap-4 p-4">
+        {/* Thumbnail */}
+        <div className="relative shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-neutral-800">
+          {event.coverImageUrl ? (
+            <Image
+              src={event.coverImageUrl}
+              alt={event.title}
+              fill
+              className="object-cover"
+              sizes="96px"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-2xl" aria-hidden="true">
+              {SPORT_ICONS[event.sportType] ?? "🎯"}
+            </div>
+          )}
+        </div>
+
+        {/* Details */}
         <div className="min-w-0 flex-1">
-          <div className="mb-1.5 flex items-center gap-2">
-            <span aria-hidden="true">{SPORT_ICONS[event.sportType] ?? "🎯"}</span>
+          <div className="mb-1 flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-gold-500">
               {SPORT_LABELS[event.sportType] ?? event.sportType}
             </span>
             {event.isFeatured && (
               <span className="rounded-full bg-gold-500/20 px-2 py-0.5 text-[10px] font-medium text-gold-400">
-                Featured
+                {t.common.featured}
               </span>
             )}
           </div>
 
           <h3 className="text-base font-bold leading-snug text-white">
-            <Link
-              href={`/events/${event.slug}`}
-              className="hover:text-gold-400 transition-colors"
-            >
+            <Link href={`/events/${event.slug}`} className="hover:text-gold-400 transition-colors">
               {event.title}
             </Link>
           </h3>
 
-          <div className="mt-2 space-y-1 text-sm text-neutral-400">
+          <div className="mt-1.5 space-y-0.5 text-sm text-neutral-400">
             <p>
-              {formatDate(new Date(event.startAt as unknown as string))} &middot;{" "}
+              {formatDate(new Date(event.startAt as unknown as string))}{" · "}
               {formatTime(new Date(event.startAt as unknown as string))} –{" "}
               {formatTime(new Date(event.endAt as unknown as string))}
             </p>
             <p>{event.locationName}</p>
           </div>
 
-          <div className="mt-3 flex items-center gap-4 text-sm">
-            <span className={isFull ? "text-red-400" : "text-emerald-400"}>
-              {isFull ? "Full" : `${spotsLeft} spots left`}
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <span className={`text-sm ${isFull ? "text-red-400" : "text-emerald-400"}`}>
+              {isFull ? t.common.event_full : t.common.spots_left(spotsLeft)}
             </span>
-            <span className="text-neutral-500">
-              {event.priceCents === 0
-                ? "Free"
-                : `$${(event.priceCents / 100).toFixed(2)}`}
+            <span className="text-sm text-neutral-500">
+              {event.priceCents === 0 ? t.common.free : `$${(event.priceCents / 100).toFixed(2)}`}
             </span>
+            <Link
+              href={`/events/${event.slug}`}
+              className="rounded-full px-4 py-1.5 text-xs font-semibold transition-colors bg-gold-500 text-brand-black hover:bg-gold-400"
+            >
+              {t.events.register}
+            </Link>
           </div>
         </div>
-
-        <Link
-          href={isFull ? "#" : `/events/${event.slug}/register`}
-          aria-disabled={isFull}
-          className={[
-            "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-            isFull
-              ? "cursor-not-allowed bg-neutral-700 text-neutral-400"
-              : "bg-gold-500 text-brand-black hover:bg-gold-400",
-          ].join(" ")}
-        >
-          {isFull ? "Full" : "Register"}
-        </Link>
       </div>
     </article>
   );

@@ -15,7 +15,6 @@ export default function Header() {
     const NAV_LINKS = [
         { href: '/', label: t.nav.home },
         { href: '/events', label: t.nav.events },
-        { href: '/calendar', label: t.nav.calendar },
         { href: '/gallery', label: t.nav.gallery },
         { href: '/sponsors', label: t.nav.partners },
         { href: '/about', label: t.nav.about },

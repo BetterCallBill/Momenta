@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import type { GalleryImage } from "@/lib/types";
-import { resolveImageUrl, needsUnoptimized } from "@/lib/imageUrl";
+import { resolveImageUrl } from "@/lib/imageUrl";
 
 interface LightboxProps {
   images: GalleryImage[];
@@ -75,15 +75,25 @@ export default function Lightbox({
       </button>
 
       <div className="relative mx-16 max-h-[80vh] max-w-[80vw]">
-        <Image
-          src={resolveImageUrl(image.url)}
-          alt={image.alt}
-          width={1200}
-          height={800}
-          className="max-h-[80vh] w-auto rounded-lg object-contain"
-          sizes="80vw"
-          unoptimized={needsUnoptimized(image.url)}
-        />
+        {image.type === "video" && image.videoUrl ? (
+          <video
+            src={image.videoUrl}
+            controls
+            autoPlay
+            muted
+            playsInline
+            className="max-h-[80vh] w-auto rounded-lg"
+          />
+        ) : (
+          <Image
+            src={resolveImageUrl(image.url)}
+            alt={image.alt}
+            width={1200}
+            height={800}
+            className="max-h-[80vh] w-auto rounded-lg object-contain"
+            sizes="80vw"
+          />
+        )}
         <p className="mt-3 text-center text-sm text-brand-white/60">
           {image.alt}
         </p>

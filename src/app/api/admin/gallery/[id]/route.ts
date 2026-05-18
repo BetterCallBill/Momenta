@@ -11,11 +11,13 @@ export async function PUT(
   const image = await prisma.galleryImage.update({
     where: { id },
     data: {
-      ...(body.tags !== undefined && { tags: body.tags }),
-      ...(body.alt !== undefined && { alt: body.alt }),
       ...(body.url !== undefined && { url: body.url }),
       ...(body.videoUrl !== undefined && { videoUrl: body.videoUrl }),
-      ...(body.eventName !== undefined && { eventName: body.eventName || null }),
+      ...(body.eventName !== undefined && {
+        eventName: body.eventName || null,
+        alt: body.eventName || "",
+      }),
+      ...(body.sportType !== undefined && { tags: body.sportType }),
     },
   });
 

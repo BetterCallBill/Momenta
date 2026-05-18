@@ -57,7 +57,7 @@ export default function EventCard({ event }: EventCardProps) {
             </span>
           </div>
           <Link
-            href={`/events/${event.slug}/register`}
+            href={`/events/${event.slug}`}
             className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
               spotsLeft > 0
                 ? "bg-gold-500 text-brand-black hover:bg-gold-400"

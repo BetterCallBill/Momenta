@@ -3,8 +3,20 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { GalleryImage } from "@/lib/types";
-import { resolveImageUrl, needsUnoptimized } from "@/lib/imageUrl";
+import { resolveImageUrl } from "@/lib/imageUrl";
 import Lightbox from "./Lightbox";
+
+function PlayIcon() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="rounded-full bg-black/60 p-3 transition-transform duration-300 group-hover:scale-110">
+        <svg className="h-8 w-8 translate-x-0.5 text-brand-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
+    </div>
+  );
+}
 
 interface GalleryGridProps {
   images: GalleryImage[];
@@ -20,8 +32,8 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
           <button
             key={img.id}
             onClick={() => setLightboxIndex(i)}
-            className="group mb-3 block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
-            aria-label={`View ${img.alt}`}
+            className="group relative mb-3 block w-full overflow-hidden rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
+            aria-label={`${img.type === "video" ? "Play video" : "View image"}: ${img.alt}`}
           >
             <Image
               src={resolveImageUrl(img.url)}
@@ -30,8 +42,8 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
               height={400}
               className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              unoptimized={needsUnoptimized(img.url)}
             />
+            {img.type === "video" && <PlayIcon />}
           </button>
         ))}
       </div>

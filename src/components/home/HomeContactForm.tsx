@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function HomeContactForm() {
+  const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -68,13 +70,13 @@ export default function HomeContactForm() {
       <div className="mx-auto max-w-2xl px-6">
         <div className={`transition-all duration-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
           <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-gold-500">
-            Get in Touch
+            {t.home.contact_label}
           </p>
           <h2 className="mt-3 text-center text-3xl font-bold dark:text-brand-white text-brand-black md:text-4xl">
-            Contact Us
+            {t.contact.page_title}
           </h2>
           <p className="mt-3 text-center text-sm dark:text-brand-white/50 text-neutral-500">
-            Questions, partnerships, or event ideas — we&apos;d love to hear from you.
+            {t.home.contact_subtitle}
           </p>
         </div>
 
@@ -91,10 +93,10 @@ export default function HomeContactForm() {
                 </svg>
               </div>
               <h3 className="mt-4 text-lg font-semibold dark:text-brand-white text-brand-black">
-                Message Sent!
+                {t.contact.form_success_title}
               </h3>
               <p className="mt-2 text-sm dark:text-brand-white/60 text-neutral-500">
-                Thanks for reaching out. We&apos;ll get back to you soon.
+                {t.contact.form_success_body}
               </p>
             </div>
           ) : (
@@ -105,14 +107,14 @@ export default function HomeContactForm() {
                     htmlFor="home-name"
                     className="block text-xs font-medium uppercase tracking-wider dark:text-brand-white/60 text-neutral-500"
                   >
-                    Name *
+                    {t.contact.form_name} *
                   </label>
                   <input
                     id="home-name"
                     name="name"
                     required
                     className="mt-1.5 w-full rounded-[8px] border dark:border-neutral-700 border-neutral-300 dark:bg-neutral-800/50 bg-white/50 px-3.5 py-2.5 text-sm dark:text-brand-white text-brand-black placeholder:dark:text-brand-white/25 placeholder:text-neutral-400 focus:border-gold-500 focus:outline-none transition-colors"
-                    placeholder="Your name"
+                    placeholder={t.contact.form_name_placeholder}
                   />
                 </div>
                 <div>
@@ -120,7 +122,7 @@ export default function HomeContactForm() {
                     htmlFor="home-email"
                     className="block text-xs font-medium uppercase tracking-wider dark:text-brand-white/60 text-neutral-500"
                   >
-                    Email *
+                    {t.contact.form_email} *
                   </label>
                   <input
                     id="home-email"
@@ -128,7 +130,7 @@ export default function HomeContactForm() {
                     type="email"
                     required
                     className="mt-1.5 w-full rounded-[8px] border dark:border-neutral-700 border-neutral-300 dark:bg-neutral-800/50 bg-white/50 px-3.5 py-2.5 text-sm dark:text-brand-white text-brand-black placeholder:dark:text-brand-white/25 placeholder:text-neutral-400 focus:border-gold-500 focus:outline-none transition-colors"
-                    placeholder="you@example.com"
+                    placeholder={t.contact.form_email_placeholder}
                   />
                 </div>
               </div>
@@ -138,7 +140,7 @@ export default function HomeContactForm() {
                   htmlFor="home-phone"
                   className="block text-xs font-medium uppercase tracking-wider dark:text-brand-white/60 text-neutral-500"
                 >
-                  Phone <span className="normal-case text-brand-white/30">(optional)</span>
+                  {t.contact.form_phone} <span className="normal-case text-brand-white/30">{t.contact.form_optional}</span>
                 </label>
                 <input
                   id="home-phone"
@@ -154,7 +156,7 @@ export default function HomeContactForm() {
                   htmlFor="home-message"
                   className="block text-xs font-medium uppercase tracking-wider dark:text-brand-white/60 text-neutral-500"
                 >
-                  Message *
+                  {t.contact.form_message} *
                 </label>
                 <textarea
                   id="home-message"
@@ -162,7 +164,7 @@ export default function HomeContactForm() {
                   required
                   rows={4}
                   className="mt-1.5 w-full rounded-[8px] border dark:border-neutral-700 border-neutral-300 dark:bg-neutral-800/50 bg-white/50 px-3.5 py-2.5 text-sm dark:text-brand-white text-brand-black placeholder:dark:text-brand-white/25 placeholder:text-neutral-400 focus:border-gold-500 focus:outline-none transition-colors resize-none"
-                  placeholder="How can we help?"
+                  placeholder={t.contact.form_message_placeholder}
                 />
               </div>
 
@@ -184,7 +186,7 @@ export default function HomeContactForm() {
                 disabled={status === "loading"}
                 className="btn-premium w-full rounded-full py-3 text-sm disabled:opacity-50"
               >
-                {status === "loading" ? "Sending..." : "Send Message"}
+                {status === "loading" ? t.contact.form_submitting : t.contact.form_submit}
               </button>
             </form>
           )}

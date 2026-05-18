@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendConfirmationEmail } from "@/lib/email";
-import { formatDateLong, formatTime } from "@/lib/dates";
 
 export async function POST(request: NextRequest) {
   // ── 1. Parse body ─────────────────────────────────────────────────────────
@@ -127,20 +125,6 @@ export async function POST(request: NextRequest) {
         user: { select: { id: true, email: true } },
       },
     });
-
-    // ── 4. Send confirmation email (non-blocking — don't fail the request) ──
-    const eventDate = `${formatDateLong(new Date(event.startAt))} · ${formatTime(new Date(event.startAt))} – ${formatTime(new Date(event.endAt))}`;
-    const eventLocation = `${event.locationName} — ${event.address}`;
-
-    sendConfirmationEmail({
-      to: trimmedEmail,
-      name: trimmedName,
-      wechatName: trimmedWechatName,
-      eventTitle: event.title,
-      eventDate,
-      eventLocation,
-      priceCents: event.priceCents,
-    }).catch((err) => console.error("[email] confirmation failed:", err));
 
     return NextResponse.json(registration, { status: 201 });
   } catch (err) {
