@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import type { GalleryImage } from "@/lib/types";
+import { resolveImageUrl } from "@/lib/imageUrl";
 
 interface LightboxProps {
   images: GalleryImage[];
@@ -75,7 +76,7 @@ export default function Lightbox({
 
       <div className="relative mx-16 max-h-[80vh] max-w-[80vw]">
         <Image
-          src={image.url}
+          src={resolveImageUrl(image.url)}
           alt={image.alt}
           width={1200}
           height={800}

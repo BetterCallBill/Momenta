@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { GalleryImage } from "@/lib/types";
+import { resolveImageUrl } from "@/lib/imageUrl";
 import Lightbox from "./Lightbox";
 
 interface GalleryGridProps {
@@ -23,7 +24,7 @@ export default function GalleryGrid({ images }: GalleryGridProps) {
             aria-label={`View ${img.alt}`}
           >
             <Image
-              src={img.url}
+              src={resolveImageUrl(img.url)}
               alt={img.alt}
               width={600}
               height={400}
