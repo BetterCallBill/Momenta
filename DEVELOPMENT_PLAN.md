@@ -21,6 +21,7 @@
 | 15 | **关于页动态化**（团队成员从 DB 读取） | ✅ 完成 |
 | 16 | **报名页付款提示**（priceCents > 0 时显示线下付款说明） | ✅ 完成 |
 | 17 | **Header 导航更新**（加入日历、赞助商链接） | ✅ 完成 |
+| 18 | **报名确认邮件**（Resend SDK，OAuth2，`noreply@momenta-events.com`） | ✅ 完成 |
 
 ---
 
@@ -272,7 +273,7 @@ npx prisma migrate dev --name add-sponsor-team-admin-video
 | 活动日历 | 纯手写月视图组件 | 避免引入大型依赖 |
 | 媒体管理 | 仅填写外部 URL | 简单可靠 |
 | 支付 | 不集成，显示线下付款说明 | 优先核心功能 |
-| 邮件通知 | 不集成（可后续加 Resend） | 降低复杂度 |
+| 邮件通知 | Resend SDK — `noreply@momenta-events.com` | 报名成功后发送确认邮件 |
 
 ---
 
