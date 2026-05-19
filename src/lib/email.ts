@@ -1,36 +1,12 @@
-import nodemailer from "nodemailer";
-import { google, Auth } from "googleapis";
+import { Resend } from "resend";
 
-// Singleton OAuth2 client — googleapis handles access token caching and refresh
-let _oauth2Client: Auth.OAuth2Client | null = null;
+let _resend: Resend | null = null;
 
-function getOAuth2Client(): Auth.OAuth2Client {
-  if (!_oauth2Client) {
-    _oauth2Client = new google.auth.OAuth2(
-      process.env.GMAIL_OAUTH_CLIENT_ID,
-      process.env.GMAIL_OAUTH_CLIENT_SECRET,
-    );
-    _oauth2Client.setCredentials({
-      refresh_token: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
-    });
+function getResend(): Resend {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY);
   }
-  return _oauth2Client;
-}
-
-async function createTransporter(): Promise<nodemailer.Transporter> {
-  const client = getOAuth2Client();
-  const { token: accessToken } = await client.getAccessToken();
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: process.env.GMAIL_USER,
-      clientId: process.env.GMAIL_OAUTH_CLIENT_ID,
-      clientSecret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
-      refreshToken: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
-      accessToken: accessToken ?? undefined,
-    },
-  });
+  return _resend;
 }
 
 export interface ConfirmationEmailData {
@@ -44,8 +20,8 @@ export interface ConfirmationEmailData {
 }
 
 export async function sendConfirmationEmail(data: ConfirmationEmailData): Promise<void> {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_OAUTH_CLIENT_ID || !process.env.GMAIL_OAUTH_CLIENT_SECRET || !process.env.GMAIL_OAUTH_REFRESH_TOKEN) {
-    console.warn("[email] Gmail OAuth env vars not set — skipping email");
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("[email] RESEND_API_KEY not set — skipping email");
     return;
   }
 
@@ -75,7 +51,6 @@ export async function sendConfirmationEmail(data: ConfirmationEmailData): Promis
           <!-- Body -->
           <tr>
             <td style="padding:32px 40px;">
-              <!-- Check icon -->
               <div style="width:56px;height:56px;background:rgba(34,197,94,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
                 <span style="font-size:28px;">✓</span>
               </div>
@@ -127,9 +102,8 @@ export async function sendConfirmationEmail(data: ConfirmationEmailData): Promis
 </body>
 </html>`;
 
-  const transporter = await createTransporter();
-  await transporter.sendMail({
-    from: `"Momenta" <${process.env.GMAIL_USER}>`,
+  await getResend().emails.send({
+    from: "Momenta <noreply@momenta.com.au>",
     to,
     subject: `✅ Registration Confirmed — ${eventTitle}`,
     html,
@@ -148,8 +122,8 @@ export interface InquiryNotificationEmailData {
 }
 
 export async function sendInquiryNotificationEmail(data: InquiryNotificationEmailData): Promise<void> {
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_OAUTH_CLIENT_ID || !process.env.GMAIL_OAUTH_CLIENT_SECRET || !process.env.GMAIL_OAUTH_REFRESH_TOKEN) {
-    console.warn("[email] Gmail OAuth env vars not set — skipping email");
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("[email] RESEND_API_KEY not set — skipping email");
     return;
   }
 
@@ -212,9 +186,8 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
 </body>
 </html>`;
 
-  const transporter = await createTransporter();
-  await transporter.sendMail({
-    from: `"Momenta" <${process.env.GMAIL_USER}>`,
+  await getResend().emails.send({
+    from: "Momenta <noreply@momenta.com.au>",
     to,
     replyTo: email,
     subject: `📩 New ${inquiryType} Inquiry from ${name}`,
