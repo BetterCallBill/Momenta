@@ -19,6 +19,7 @@
     "@prisma/client": "^7.5.0",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.3.1",
+    "googleapis": "^171.4.0",
     "jose": "^6.2.1",
     "next": "^16.1.6",
     "nodemailer": "^8.0.4",
@@ -28,8 +29,16 @@
     "stripe": "^20.4.1",
     "xlsx": "^0.18.5"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "pnpm": {
-    "onlyBuiltDependencies": ["@prisma/engines", "esbuild", "prisma", "sharp"]
+    "onlyBuiltDependencies": [
+      "@prisma/engines",
+      "esbuild",
+      "prisma",
+      "sharp"
+    ]
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",

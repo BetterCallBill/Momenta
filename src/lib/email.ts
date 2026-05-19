@@ -1,22 +1,36 @@
 import nodemailer from "nodemailer";
+import { google, Auth } from "googleapis";
 
-// Re-use the transporter across requests in the same Node.js process
-let _transporter: nodemailer.Transporter | null = null;
+// Singleton OAuth2 client — googleapis handles access token caching and refresh
+let _oauth2Client: Auth.OAuth2Client | null = null;
 
-function getTransporter() {
-  if (!_transporter) {
-    _transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: process.env.GMAIL_USER,
-        clientId: process.env.GMAIL_OAUTH_CLIENT_ID,
-        clientSecret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
-        refreshToken: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
-      },
+function getOAuth2Client(): Auth.OAuth2Client {
+  if (!_oauth2Client) {
+    _oauth2Client = new google.auth.OAuth2(
+      process.env.GMAIL_OAUTH_CLIENT_ID,
+      process.env.GMAIL_OAUTH_CLIENT_SECRET,
+    );
+    _oauth2Client.setCredentials({
+      refresh_token: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
     });
   }
-  return _transporter;
+  return _oauth2Client;
+}
+
+async function createTransporter(): Promise<nodemailer.Transporter> {
+  const client = getOAuth2Client();
+  const { token: accessToken } = await client.getAccessToken();
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.GMAIL_USER,
+      clientId: process.env.GMAIL_OAUTH_CLIENT_ID,
+      clientSecret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
+      refreshToken: process.env.GMAIL_OAUTH_REFRESH_TOKEN,
+      accessToken: accessToken ?? undefined,
+    },
+  });
 }
 
 export interface ConfirmationEmailData {
@@ -113,7 +127,8 @@ export async function sendConfirmationEmail(data: ConfirmationEmailData): Promis
 </body>
 </html>`;
 
-  await getTransporter().sendMail({
+  const transporter = await createTransporter();
+  await transporter.sendMail({
     from: `"Momenta" <${process.env.GMAIL_USER}>`,
     to,
     subject: `✅ Registration Confirmed — ${eventTitle}`,
@@ -197,7 +212,8 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
 </body>
 </html>`;
 
-  await getTransporter().sendMail({
+  const transporter = await createTransporter();
+  await transporter.sendMail({
     from: `"Momenta" <${process.env.GMAIL_USER}>`,
     to,
     replyTo: email,
