@@ -10,6 +10,7 @@ function getResend(): Resend {
 }
 
 export interface ConfirmationEmailData {
+  registrationId: string;
   to: string;
   name: string;
   wechatName?: string | null;
@@ -25,7 +26,7 @@ export async function sendConfirmationEmail(data: ConfirmationEmailData): Promis
     return;
   }
 
-  const { to, name, wechatName, eventTitle, eventDate, eventLocation, priceCents } = data;
+  const { registrationId, to, name, wechatName, eventTitle, eventDate, eventLocation, priceCents } = data;
   const displayName = wechatName || name;
   const priceLabel = priceCents === 0 ? "Free" : `$${(priceCents / 100).toFixed(2)} AUD`;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://momenta.com.au";
@@ -102,16 +103,24 @@ export async function sendConfirmationEmail(data: ConfirmationEmailData): Promis
 </body>
 </html>`;
 
-  await getResend().emails.send({
-    from: "Momenta <noreply@momenta-events.com>",
-    to,
-    subject: `✅ Registration Confirmed — ${eventTitle}`,
-    html,
-    text: `Hi ${displayName},\n\nYour registration for "${eventTitle}" is confirmed!\n\nDate: ${eventDate}\nLocation: ${eventLocation}\nPrice: ${priceLabel}\n\nSee you there!\n\n— The Momenta Team`,
-  });
+  const { error } = await getResend().emails.send(
+    {
+      from: "Momenta <noreply@momenta-events.com>",
+      to,
+      subject: `✅ Registration Confirmed — ${eventTitle}`,
+      html,
+      text: `Hi ${displayName},\n\nYour registration for "${eventTitle}" is confirmed!\n\nDate: ${eventDate}\nLocation: ${eventLocation}\nPrice: ${priceLabel}\n\nSee you there!\n\n— The Momenta Team`,
+    },
+    { idempotencyKey: `registration-confirmation/${registrationId}` },
+  );
+
+  if (error) {
+    throw new Error(`[email] Resend error: ${error.message}`);
+  }
 }
 
 export interface InquiryNotificationEmailData {
+  inquiryId: string;
   to: string;
   name: string;
   email: string;
@@ -127,7 +136,7 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
     return;
   }
 
-  const { to, name, email, phone, inquiryType, message, submittedAt } = data;
+  const { inquiryId, to, name, email, phone, inquiryType, message, submittedAt } = data;
   const timestampStr = new Intl.DateTimeFormat("en-AU", {
     timeZone: "Australia/Sydney",
     weekday: "short",
@@ -186,12 +195,19 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
 </body>
 </html>`;
 
-  await getResend().emails.send({
-    from: "Momenta <noreply@momenta-events.com>",
-    to,
-    replyTo: email,
-    subject: `📩 New ${inquiryType} Inquiry from ${name}`,
-    html,
-    text: `New inquiry from ${name} (${email})\nPhone: ${phone || "—"}\nType: ${inquiryType}\nSubmitted: ${timestampStr}\n\nMessage:\n${message}`,
-  });
+  const { error } = await getResend().emails.send(
+    {
+      from: "Momenta <noreply@momenta-events.com>",
+      to,
+      replyTo: email,
+      subject: `📩 New ${inquiryType} Inquiry from ${name}`,
+      html,
+      text: `New inquiry from ${name} (${email})\nPhone: ${phone || "—"}\nType: ${inquiryType}\nSubmitted: ${timestampStr}\n\nMessage:\n${message}`,
+    },
+    { idempotencyKey: `inquiry-notification/${inquiryId}` },
+  );
+
+  if (error) {
+    throw new Error(`[email] Resend error: ${error.message}`);
+  }
 }

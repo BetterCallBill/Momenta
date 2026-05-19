@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     });
 
     sendInquiryNotificationEmail({
+      inquiryId: inquiry.id,
       to: "momenta0429@gmail.com",
       name,
       email,

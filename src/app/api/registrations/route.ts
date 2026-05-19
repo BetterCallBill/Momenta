@@ -129,6 +129,7 @@ export async function POST(request: NextRequest) {
     });
 
     sendConfirmationEmail({
+      registrationId: registration.id,
       to: trimmedEmail,
       name: trimmedName,
       wechatName: trimmedWechatName,
