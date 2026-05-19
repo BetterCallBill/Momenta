@@ -103,7 +103,7 @@ export async function sendConfirmationEmail(data: ConfirmationEmailData): Promis
 </html>`;
 
   await getResend().emails.send({
-    from: "Momenta <noreply@momenta.com.au>",
+    from: "Momenta <noreply@momenta-events.com>",
     to,
     subject: `✅ Registration Confirmed — ${eventTitle}`,
     html,
@@ -187,7 +187,7 @@ export async function sendInquiryNotificationEmail(data: InquiryNotificationEmai
 </html>`;
 
   await getResend().emails.send({
-    from: "Momenta <noreply@momenta.com.au>",
+    from: "Momenta <noreply@momenta-events.com>",
     to,
     replyTo: email,
     subject: `📩 New ${inquiryType} Inquiry from ${name}`,
